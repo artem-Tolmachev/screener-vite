@@ -1,0 +1,38 @@
+.item{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    height: 50px;
+    border-bottom: 1px solid var(--color-text-secondary);
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.buttons{
+    display: flex;
+    width: 70px;
+}
+.containerButtons{
+    display: flex;
+}
+.icon:hover{
+    background-color: var(--color-grid);
+}
+.extraClass{
+    border-radius: 5px;
+    transition: all .3s;
+}
+.extraClass svg{
+    width: 100%;
+    height: 100%;
+    fill: var(--color-text-secondary);
+}
+
+.extraClass:hover{
+    background-color: var(--color-grid);
+}
+.add svg{
+    fill: rgb(78, 126, 248);
+}

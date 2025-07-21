@@ -1,0 +1,61 @@
+.list{
+    padding: 0; 
+    margin: 0;
+    list-style: none;
+    height: 80%;
+    overflow-y: auto;
+}
+.close{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 0;
+  right: 0;
+  border-radius: 8px;
+  transform: translate(-50%, 50%);
+  cursor: pointer;
+  transition: ease-in-out 0.1s;
+}
+.close:hover{
+  background-color: var(--color-grid);
+}
+.buttons{
+    display: flex;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+.btn:not(:last-child){
+    margin-right: 20px;
+}
+.btn{
+    border-radius: 20px;
+    padding: 10px;
+    background-color: var(--color-text-secondary);
+    color: var(--color-bg);
+    border: none;
+    cursor: pointer;
+    border: none;
+}
+.btn_active{
+    border-radius: 20px;
+    padding: 10px;
+    background-color: var(--color-red);
+    color: var(--color-text-primary);
+}
+.addTitle{
+    padding-left: 20px;
+    font-size: 20px;
+    color: var(--color-text-primary)
+}
+.addWrapper{
+    height: 70%;
+    scrollbar-width: thin; /* Тонкий скролбар */
+    scrollbar-color: #888 transparent; 
+}
+.header{
+    padding: 20px 0px;
+}

@@ -1,0 +1,17 @@
+.wrapper{
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--color-text-secondary);
+}
+.icon{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+/* .symbol{
+    margin-left: 10px;
+} */

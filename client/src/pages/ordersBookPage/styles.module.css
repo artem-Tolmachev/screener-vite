@@ -1,0 +1,17 @@
+.bid{
+    color: green;
+}
+.ask{
+    color: red;
+}
+.askSum{
+    background-color: rgb(241, 138, 138);
+}
+.bidSum{
+    background-color: rgb(72, 156, 72);
+}
+.row{
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}

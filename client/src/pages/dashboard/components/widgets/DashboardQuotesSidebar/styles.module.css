@@ -1,0 +1,12 @@
+
+.dashbord_right {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-block);
+    color: var(--color-text-primary);
+    box-sizing: border-box;
+    z-index: 2;
+}
+.header {
+    display: flex;
+}

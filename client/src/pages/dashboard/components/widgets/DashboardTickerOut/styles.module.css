@@ -1,0 +1,7 @@
+.DashboardTickerOut{
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none;
+  overflow-y: auto;
+  height: 500px;
+}

@@ -1,0 +1,19 @@
+:root {
+    --color-bg-panel: #0f0f0f;
+    --color-bg: #131722; 
+    --color-panel: #1E222D;
+    --color-active: #2A2E39;
+    --color-text-primary: #D1D4DC;
+    --color-text-secondary: #6A6D75;
+    --color-grid: #3E3E3E;
+    --color-green: #22AB94;
+    --color-red: #F23645;
+    --color-yellow: #FFB800;
+    --color-blue: #7297ff;
+    --color-perple: #fd95fd;
+    
+    --border-block: 8px;
+    --padding-block: 5px;
+  }
+
+ 

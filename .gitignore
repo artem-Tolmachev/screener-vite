@@ -1,0 +1,25 @@
+# --- Общие ---
+node_modules/
+dist/
+.env
+*.log
+.DS_Store
+Thumbs.db
+
+# --- Client (Vite) ---
+client/node_modules/
+client/dist/
+client/.vite/
+client/.env
+client/.DS_Store
+
+# --- Server (Express) ---
+server/node_modules/
+server/dist/
+server/.env
+server/.DS_Store
+
+# --- VSCode / IDE ---
+.vscode/
+.idea/
+*.swp

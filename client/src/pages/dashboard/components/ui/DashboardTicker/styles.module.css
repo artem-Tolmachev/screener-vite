@@ -1,0 +1,19 @@
+.element{
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    justify-content: flex-end;
+    max-width: 100%;
+    min-width: 0;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.volume{
+
+    color: var(--color-perple)
+}
+.turnover{
+
+    color: var(--color-green)
+}
