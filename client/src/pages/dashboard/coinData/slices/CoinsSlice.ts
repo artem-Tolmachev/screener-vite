@@ -88,7 +88,6 @@ export const coins = createSlice({
     
   },
   addCoinToList: (state, action: PayloadAction<{item: MarketData, list: string}>) => {
-    const listName = state.activeList;
     const {item, list} = action.payload;
     const targetList = list ?? state.activeList;
     const marker = state.markers[item.symbol] || '';
@@ -179,7 +178,7 @@ export const coins = createSlice({
   setActiveList: (state, action: PayloadAction<string>) => {
     state.activeList = action.payload
   },
-    listCleaner: (state, action: PayloadAction<string>) => {
+    listCleaner: (state) => {
     const listName = state.activeList;
     state.storeList[listName].item = [];
   },
