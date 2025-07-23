@@ -1,6 +1,5 @@
-import DashboardPageHeader from '@/pages/dashboard/components/widgets/DashboardPageHeader/DashboardPageHeader';
-import styles from './styles.module.css';
 import DashboardPage from '@/pages/dashboard/components/ui/DashboardPage/DashboardPage';
+import DashboardPageHeader from '@/pages/dashboard/components/widgets/DashboardPageHeader/DashboardPageHeader';
 
 function Dashboard(){
     return(
