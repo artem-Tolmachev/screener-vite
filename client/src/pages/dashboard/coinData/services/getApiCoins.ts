@@ -1,11 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { DefaultCoin } from '../constants/defaultSettings';
-import { BackendResponse, CoinsData, HeatMapData, MarketData, OrdersBookResponse, OriginalResponse } from '@/pages/dashboard/types';
+import { BackendResponse,  HeatMapData,  OrdersBookResponse, OriginalResponse } from '@/pages/dashboard/types';
 import { tickerParser, dataKlinesParser, dataValumeParser, defaultCoinParser} from '@/pages/dashboard/utils/Parser';
-
+    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
 export const coinsApi = createApi({
     reducerPath: 'coinsApi',
-    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
 baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({

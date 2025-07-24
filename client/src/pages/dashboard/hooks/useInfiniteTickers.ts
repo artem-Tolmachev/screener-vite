@@ -6,7 +6,6 @@ export const LOADED = 2;
 let itemStatusMap: { [index: number]: number } = {};
 
 interface Props { tick: MarketData[];}
-type IsItemLoaded = { isItemLoaded: (index: number) => boolean;}
 
 export const useInfiniteTickers = ({tick}: Props) => {
     const [items, setItems] = useState<MarketData[]>([]);

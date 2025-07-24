@@ -41,7 +41,7 @@ const DashboardTickerOut = ({ columns }: Props) => {
     const deliteCoin = (item: MarketData) => {
         dispatch(delCoin(item));
     }
-    function hendleChart<T>(name: string, src: string, ask1Price: string, bid1Price: string) {
+    function hendleChart(name: string, src: string, ask1Price: string, bid1Price: string) {
         dispatch(addChart({
             symbol: name,
             src: src,

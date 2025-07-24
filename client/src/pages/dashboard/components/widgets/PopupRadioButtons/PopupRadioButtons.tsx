@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState  } from 'react';
+import { useEffect, useRef} from 'react';
 import { RadioButtonsComponent } from '@/shared/components/RadioButtons/RadioButtonsComponent';
 
 interface Props {

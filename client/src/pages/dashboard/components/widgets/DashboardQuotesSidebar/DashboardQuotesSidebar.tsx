@@ -23,7 +23,7 @@ const DashboardQuotesSidebar = () => {
         { key: 'turnover', name: 'Оборот', visible: 1 }
     ])
 
-    const { data, error, isLoading} = useGetCoinsQuery();
+    const { data } = useGetCoinsQuery();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
