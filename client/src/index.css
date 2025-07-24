@@ -133,6 +133,7 @@
   .icon-flag{
     fill: transparent;
     transition: all .3s;
+    margin-right: 8px;
   }
   .ticker-dashboard-aut:hover{
     .icon-flag{
