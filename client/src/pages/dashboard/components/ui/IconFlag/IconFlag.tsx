@@ -1,5 +1,7 @@
-
-const IconFlag = () => {
+interface Props {
+    marker?: string
+}
+const IconFlag = ({marker}:Props) => {
     return (
         <svg 
             className='icon-flag'
@@ -8,8 +10,9 @@ const IconFlag = () => {
             width="14" 
             height="12" 
             focusable="false" 
+            fill={marker}
             preserveAspectRatio="none">
-            <path  d="M14 12l-4-6 4-6H0v12z">
+            <path  fill={marker}  d="M14 12l-4-6 4-6H0v12z">
             </path>
         </svg>
     )
