@@ -1,4 +1,4 @@
-import { CandlestickData, CandlestickSeriesOptions, CustomData, ISeriesApi, Time, UTCTimestamp, WhitespaceData } from 'lightweight-charts';
+import { CandlestickData, CandlestickSeriesOptions, ISeriesApi, Time, UTCTimestamp, WhitespaceData } from 'lightweight-charts';
 import { DefaultCoin } from '../coinData/constants/defaultSettings';
 import { tickerParser } from '../utils/Parser';
 

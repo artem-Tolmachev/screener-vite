@@ -80,12 +80,3 @@ const DashboardTickerOut = ({ columns }: Props) => {
     )
 }
 export default DashboardTickerOut;
-
-{/* <div className='perent'>
-    <div className='child-1 '>
-
-    </div>
-    <div className='child-2'>
-
-    </div>
-</div> */}

@@ -1,5 +1,4 @@
 import { useAppSelector } from "@/app/store/store";
-import { useState } from "react";
 
 interface Props {
     symbol: string;

@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
 const container = document.getElementById('root')
-import './web-vitals'; 
 
 if (container) {
   const root = createRoot(container)

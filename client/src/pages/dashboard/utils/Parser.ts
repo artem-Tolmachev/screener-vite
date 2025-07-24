@@ -1,8 +1,7 @@
-import {  BybitOrderbookResponse, BybitOrderbookResult, KlineTuple, KlineTupleValume, MarketData } from '../types/index';
+import { KlineTuple, KlineTupleValume, MarketData } from '../types/index';
 import { UTCTimestamp } from 'lightweight-charts';
 import { extractTokenSymbol } from './utils';
 import { DefaultCoin } from '../coinData/constants/defaultSettings';
-import { HeatMapData } from '../components/widgets/HeatMap/data';
 
 export const dataKlinesParser = (list: KlineTuple[]) =>
   list.map(([time, open, high, low, close]) => ({
@@ -26,12 +25,10 @@ export const tickerParser = (list: MarketData[]) =>
     volume24h, 
     symbol, 
     lastPrice, 
-    src,
     ask1Price,
     basis, 
     basisRate, 
     bid1Price,
-    marker
    }) => {
     const token = extractTokenSymbol(symbol);
     return {
@@ -56,14 +53,3 @@ export const defaultCoinParser = ({
   bid1Price
 });
 
-// export const dataHeatMapParser = (res: BybitOrderbookResult | BybitOrderbookResult[]): HeatMapData[] =>
-//   (
-//     Array.isArray(res) ? res : [res]).map(({ cts, a }) => ({
-//     time: (+cts / 1000) as UTCTimestamp,
-//     cells: a.map(arr => ({
-//       low: +arr[0],
-//       high: +arr[0] / 2,
-//       amount: +arr[1],
-//     })),
-//   })
-// );

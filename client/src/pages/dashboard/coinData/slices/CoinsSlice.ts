@@ -178,7 +178,7 @@ export const coins = createSlice({
   setActiveList: (state, action: PayloadAction<string>) => {
     state.activeList = action.payload
   },
-    listCleaner: (state) => {
+    listCleaner: (state, action: PayloadAction<string>) => {
     const listName = state.activeList;
     state.storeList[listName].item = [];
   },
