@@ -7,6 +7,7 @@ export default function loadOrderState() {
   
   if (fs.existsSync(filePath)) {
     const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
     for (const symbol in json) {
       if(json[symbol].time)
       orderBooks.set(symbol, {
@@ -16,6 +17,6 @@ export default function loadOrderState() {
       });
     }
   }  
-
   return orderBooks;
 }
+

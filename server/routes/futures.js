@@ -1,23 +1,23 @@
 import express from 'express';
-import axios from 'axios';
-import {TICKERS_URL } from '../config/utils.js';
-
+import { allFetchers } from '../services/allFetchers.js';
 const router = express.Router();
 
 router.get('/get-futures', async (req, res) => {
   try {
-    // 1. Получаем список всех символов
-    const tickersResponse = await axios.get(TICKERS_URL);
+    const tickersResponse = await allFetchers();
+    
     if (!tickersResponse.data?.result?.list) {
       throw new Error('Invalid tickers response structure');
     }
+
     const allSymbols = tickersResponse.data?.result?.list.map(item => item.symbol);
     const defaultCoin = tickersResponse.data?.result?.list?.find((ticker) => ticker.symbol === 'BTCUSDT');  
   
     res.json({
-      tickers: tickersResponse.data?.result?.list, // Переименовываем для ясности
+      tickers: tickersResponse.data?.result?.list,
       btcData: defaultCoin
     });
+
   } catch (error) {
     console.error('Global error:', error);
     res.status(500).json({

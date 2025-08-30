@@ -27,6 +27,7 @@ async function getAllSymbols() {
     const symbols = response.data.result.list
       .filter(instrument => instrument.status === 'Trading')
       .map(instrument => instrument.symbol);
+      console.log(response.data.result.list)
     return symbols;
   } catch (error) {
     console.error('Error fetching symbols:', error);

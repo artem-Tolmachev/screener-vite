@@ -11,7 +11,6 @@ export default async function OrdersBook(app) {
 
     const allSymbols = await Tickers();
     let socket = new WebSocket('wss://stream.bybit.com/v5/public/linear');
-    
     function setupSocketHandlers(ws) {
         ws.on('open', async () => {
             console.log('Подключено к Bybit');
@@ -31,20 +30,20 @@ export default async function OrdersBook(app) {
             let order;
             try {
                 order = JSON.parse(data);
-                const orders = filterOrders(order);
-                if (!orders) return;
+                // const orders = filterOrders(order);
+                if (!order) return;
                 // сохраняем данные в  .log
                 // orderbookSaver(order)
                 // saveHeatMapData(order)
                 if (!order?.data?.s) {
-                    console.warn('⚠️ Пропущено сообщение без data.s:', order);
+                    // console.warn('⚠️ Пропущено сообщение без data.s:', order);
                     return;
                 }
-                const symbol = orders.data.s;
-                const time = orders.ts;
-            
+                const symbol = order.data.s;
+                const time = order.ts;
+
                 if(!orderBooks.has(symbol)){
-                    orderBooks.set(symbol, { bids: new Map(orders.data.b), asks: new Map(orders.data.a), time});
+                    orderBooks.set(symbol, { bids: new Map(order.data.b), asks: new Map(order.data.a), time});
                 }else{
                     // Раскоментировать для поступления новых ордеров           
                     // const book = orderBooks.get(orders.data.s);
@@ -54,7 +53,7 @@ export default async function OrdersBook(app) {
                 }
                 // Игнорируем служебные сообщения
                 if (order.op === 'pong' || order.op === 'subscribe') return;
-                if (!orders.data || !orders.data.b || !orders.data.a) return;                
+                if (!order.data || !order.data.b || !order.data.a) return;                
             } catch(error) {
                 console.log('Ошибка обработки ордера:', error);
             }
@@ -72,12 +71,11 @@ export default async function OrdersBook(app) {
             }, 5000);
         });
     }
-    
     // сохраняем Map в стейт
         setInterval(() => {
             // Раскоментировать для поступления новых ордеров      
             // saveOrderState(orderBooks); 
             // saveHeatMap(orderBooks)
-        }, 5000); // каждую минуту
+        }, 5000); 
     setupSocketHandlers(socket);
 }
