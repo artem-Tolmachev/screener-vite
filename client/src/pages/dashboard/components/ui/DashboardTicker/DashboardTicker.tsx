@@ -7,28 +7,37 @@ import { useAppDispatch, useAppSelector } from '@/app/store/store';
 import { useHendlerMarker } from '@/pages/dashboard/hooks/useHendlerMarker';
 import PopupRadioButtons from '../../widgets/PopupRadioButtons/PopupRadioButtons';
 import { useEffect } from 'react';
-import { coinListUpdate } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { coinListUpdate} from '@/pages/dashboard/coinData/slices/CoinsSlice';
 
 const DashboardTicker = ({ 
     name, price, 
     volume, turnover, 
-    col, src, item
+    col, src, item, panelIndex
 }: FullTickerProps) => {
-    const marker = useAppSelector(state => state.coins.markers[name] || '');
+    const screenId = useAppSelector(state => state.coins.mainScreen);
+    const allScreens = useAppSelector(state => state.coins.allscreens);
+    const ativeArray = allScreens.find(el => el.id === screenId);
+    const index = useAppSelector(store => store.coins.panelIndex);
+
+    if(!ativeArray) return;
+    const activeMarkerArray = ativeArray.screens[panelIndex];
+    // const activeMarkerArray = ativeArray.screens.find(item => item.isActive === true)
+    let marker = activeMarkerArray?.markers[name] || ''
+
     const {markerSettings, isValue, justAddedMarker, setSetVel} = useHendlerMarker();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-       dispatch(coinListUpdate({marker, item}))
+       dispatch(coinListUpdate({marker, item, index, screenId}))
     },[marker])
 
     return (
         <div 
-            className="ticker flex w-full relative items-center" >
-            <MarkerComponent flag='dashboard' item={item} marker={marker} symbol={name} markerSettings={markerSettings}/>
+            className="ticker flex w-full relative items-center">
+            <MarkerComponent panelIndex={panelIndex} marker={marker} symbol={name} markerSettings={markerSettings}/>
             {isValue && justAddedMarker && (<PopupRadioButtons currentMarker={marker} coin={name} isOpen={isValue} isClose={setSetVel}/>)}
             {<div className="w-[160px] flex items-center overflow-hidden">
-                 <IconCoin src={src} symbol={name} />
+                 <IconCoin panelIndex={panelIndex} src={src} symbol={name} />
             </div>}
             {col.find(c => c.key === 'price')?.visible === 1
                 && <div className="w-[100px] text-right">

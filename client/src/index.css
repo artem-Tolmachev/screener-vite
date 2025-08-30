@@ -84,8 +84,7 @@
   --color-red: #F23645;
   --color-yellow: #FFB800;
   --color-blue: #7297ff;
-  --color-perple: #5b1776;
-  
+  --color-perple: #4a2559;
   --border-block: 8px;
   --padding-block: 5px;
 }
@@ -94,19 +93,24 @@
   body {
     @apply text-foreground;
   }
-  .header-link{
-    @apply text-lg flex items-center h-full;
+  .header-link {
+    @apply text-lg flex items-center h-full w-full;
     padding: 0px 16px;
     color: var(--color-blue-200);
     font-weight: 800;
     transition: all 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-
   .header-link:hover{
-    background-color: var(--color-blue-800);
+    background-color: #0c7c9e;
   }
   .active-header-link{
-    background-color: var(--color-blue-700);
+    background-color: #0e4151;
+  }
+   .header-link:active{
+    background-color: #063b4b;
   }
   svg.icon-tabler{
     width: 24px;
@@ -146,4 +150,7 @@
     }
   }
 }
-
+/* ------------- экраны screens --------------------- */
+/* .wrapper-chart .chart-wr .tv-lightweight-charts{
+  height: 100% !important;
+} */

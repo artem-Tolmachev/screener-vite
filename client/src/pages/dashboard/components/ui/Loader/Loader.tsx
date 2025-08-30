@@ -6,12 +6,13 @@ import { MarketData } from "@/pages/dashboard/types";
 
 interface Props { 
   tick: MarketData[];
-  closeAddModal: (arg: boolean) => void;
+  panelIndex: number;
+  // closeAddModal: (arg: boolean) => void;
 }
 
-export default function Loader({tick, closeAddModal}: Props) {
+export default function Loader({tick, panelIndex}: Props) {
   const {isItemLoaded, loadMore, items, itemStatusMap} = useInfiniteTickers({tick});
-  
+
   return (
     <>
       <InfiniteLoader
@@ -33,7 +34,7 @@ export default function Loader({tick, closeAddModal}: Props) {
               itemStatusMap,
               LOADED,
               LOADING,
-              closeAddModal,
+              panelIndex
             }}
           >
             {ContainerLoader}

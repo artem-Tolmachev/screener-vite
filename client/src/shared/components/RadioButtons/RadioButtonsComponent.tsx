@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/app/store/store";
+import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { Label } from "@/components/ui/label";
 import {
   RadioGroup,
@@ -12,10 +12,14 @@ type Props = {
 }
 
 export function RadioButtonsComponent({ symbol, currentMarker}: Props) {
+  const screenId = useAppSelector(state => state.coins.mainScreen);
   const dispatch = useAppDispatch();
+  const panelIndex = useAppSelector(store => store.coins.panelIndex);
+
   function onChaneMarker (val: string){
-   dispatch(addMarker({ symbol, marker: val }));
+   dispatch(addMarker({ symbol, marker: val, screenId, panelIndex}));
   }
+  
   return (
     <RadioGroup 
         className="flex justify-between"

@@ -14,8 +14,8 @@ import IconBookmarkPlus from "../Icons/IconBookmarkPlus"
 import { useState } from "react"
 import useCreateNewWatchList from "@/pages/dashboard/hooks/useCreateNewWatchList"
 import { Input } from "@/components/ui/input"
+import { useAppDispatch, useAppSelector } from "@/app/store/store"
 import { setActiveList } from "@/pages/dashboard/coinData/slices/CoinsSlice"
-import { useAppDispatch } from "@/app/store/store"
 
 interface Props {
   setListnameSelect: (value: string) => void;
@@ -23,14 +23,21 @@ interface Props {
 
 export default function DialogComponentCreateList({setListnameSelect}: Props)  {
   const [listName, setListname] = useState('')
-  const addListToStore = useCreateNewWatchList(listName, setListname)
-  // const activedList = useAppSelector(store => store.coins.activeList)
+  const panelIndex = useAppSelector(store => store.coins.panelIndex);
+
+  const addListToStore = useCreateNewWatchList(listName, setListname, panelIndex);
+
+  // const screenOptionGroop = useAppSelector(state => state.coins.allscreens);
+  const screenId = useAppSelector(store => store.coins.mainScreen);
+  // const ativeArray = screenOptionGroop.find(el => el.id === screenId);
+
   const dispatch = useAppDispatch();
 
   function handelSave(){
+    console.log(panelIndex, listName)
     setListnameSelect(listName)
     addListToStore()
-    dispatch(setActiveList(listName))
+    dispatch(setActiveList({listName, panelIndex, screenId}))
   }
 
   return (

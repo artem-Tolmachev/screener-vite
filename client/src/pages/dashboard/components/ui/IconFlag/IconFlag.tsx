@@ -2,6 +2,7 @@ interface Props {
     marker?: string
 }
 const IconFlag = ({marker}:Props) => {
+    let icon = marker ?? 'oklch(0.56 0.02 261.8)'
     return (
         <svg 
             className='icon-flag'
@@ -10,9 +11,9 @@ const IconFlag = ({marker}:Props) => {
             width="14" 
             height="12" 
             focusable="false" 
-            fill={marker}
+            fill={icon}
             preserveAspectRatio="none">
-            <path  fill={marker}  d="M14 12l-4-6 4-6H0v12z">
+            <path  fill={icon}  d="M14 12l-4-6 4-6H0v12z">
             </path>
         </svg>
     )

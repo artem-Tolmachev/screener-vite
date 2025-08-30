@@ -4,11 +4,17 @@ interface Props {
     symbol: string;
     src: string;
     VorceVisible?: boolean;
+    panelIndex: number;
 }
 
-const IconCoin = ({ symbol, src, VorceVisible}: Props) => {
-    const isLogo = useAppSelector(store => store.coins.isLogo);
-    
+const IconCoin = ({panelIndex, symbol, src, VorceVisible}: Props) => {
+    const screenId = useAppSelector(state => state.coins.mainScreen);
+    const allScreens = useAppSelector(state => state.coins.allscreens);    
+    const ativeArray = allScreens.find(el => el.id === screenId);
+    if(!ativeArray) return;
+    const activeScreen = ativeArray.screens[panelIndex];
+    if(!activeScreen) return;
+    const isLogo = activeScreen.isLogo;
     const showLogo = VorceVisible ?? isLogo;
 
     return (

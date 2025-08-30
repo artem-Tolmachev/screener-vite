@@ -6,18 +6,29 @@ import { useAppSelector } from '@/app/store/store';
 import { useDispatch } from 'react-redux';
 import DeliteButton from '../../ui/DeliteButton/DeliteButton';
 import { usePersistedInterval } from '@/pages/dashboard/hooks/usePersistedInterval';
-import { IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
-import { addChart, delCoin } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { AllDataCoin, IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
+import { addChart, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import useShowHide from '@/pages/dashboard/hooks/useShowHide';
 
 interface Props {
     columns: IDashboardHeaderItems[];
+    selectedCoin: MarketData[];
+    isActive: boolean;
+    panelIndex: number;
+    screensDataArray: AllDataCoin[] | undefined;
 }
 
-const DashboardTickerOut = ({ columns }: Props) => {
-    const activeList = useAppSelector(store => store.coins.activeList);
-    const selectedList = useAppSelector((store) => store.coins.storeList[activeList])
-    const selectedCoin: MarketData[] = selectedList?.item ?? [];
+const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
+    const panel = screensDataArray?.[panelIndex];
+    const activeList = panel?.activeList;
+    if(!activeList) return
+    const list = panel?.storeList?.[activeList];
+
+    if (!list) return null;
+    const data = list.item;
+ 
+    const screenId = useAppSelector(store => store.coins.mainScreen);
+
     const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
     const activedSymbol = usePersistedInterval('symbol');
     const isHovered = useShowHide(false);
@@ -38,22 +49,29 @@ const DashboardTickerOut = ({ columns }: Props) => {
         setActiveSymbol(symbol === activeSymbol ? activeSymbol : symbol);
     }
     const dispatch = useDispatch();
+
     const deliteCoin = (item: MarketData) => {
-        dispatch(delCoin(item));
+        dispatch(delCoin({item, screenId, panelIndex}));
+        const symbol = item.symbol;
+        dispatch(removeMarker({symbol, screenId, panelIndex}));
     }
+
     function hendleChart(name: string, src: string, ask1Price: string, bid1Price: string) {
         dispatch(addChart({
             symbol: name,
             src: src,
             ask1Price: ask1Price,
-            bid1Price: bid1Price
+            bid1Price: bid1Price,
+            screenId: screenId,
+            panelIndex: panelIndex
         }))
         getActiveClass(name)
     }
+
     return (
         <div className={`${styles.DashboardTickerOut} parents-block`}>
             {
-                selectedCoin.map((ticker) => (
+                data.map((ticker) => (
                     <div
                         onMouseEnter={() => {isHovered.show(), isHovered.symbol(ticker.symbol)}}
                         onMouseLeave={() => {isHovered.hide(), isHovered.symbol(ticker.symbol)}}
@@ -70,8 +88,9 @@ const DashboardTickerOut = ({ columns }: Props) => {
                             col={columns}
                             src={ticker.src}
                             item={ticker}
+                            panelIndex={panelIndex}
                         />
-                        {isHovered.name === ticker.symbol && isHovered.isVisible && <DeliteButton onClick={() => deliteCoin(ticker)} />}
+                        {isHovered.name === ticker.symbol && isHovered.isVisible && <DeliteButton onClick={() => deliteCoin(ticker)}/>}
                     </div>
                     )
                 )

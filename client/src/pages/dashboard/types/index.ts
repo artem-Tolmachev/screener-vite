@@ -1,5 +1,5 @@
 import { CandlestickData, CandlestickSeriesOptions, ISeriesApi, Time, UTCTimestamp, WhitespaceData } from 'lightweight-charts';
-import { DefaultCoin } from '../coinData/constants/defaultSettings';
+import { chartSettings, DefaultCoin } from '../coinData/constants/defaultSettings';
 import { tickerParser } from '../utils/Parser';
 
 export interface CoinsData {
@@ -49,7 +49,6 @@ export type MarketData =
   | "src"
   | "marker"
   >;
-
 export type TickerProps = {
   key: string;
   name: string;
@@ -101,47 +100,11 @@ export interface IDashboardHeaderItems {
 
 export type Candlestick = ISeriesApi<"Candlestick", Time, CandlestickData<Time> | WhitespaceData<Time>, CandlestickSeriesOptions>  | null;
 
-// ----------- OrderBook -----
-export interface OrderBookEntry {
-  /** Цена */
-  [0]: string;
-  /** Объём */
-  [1]: string;
-}
-
-export interface BybitOrderbookResult {
-  /** Символ, например BTCUSDT */
-  s: string;
-  /** Ask (продажи): массив [цена, объем] */
-  a: OrderBookEntry[];
-  /** Bid (покупки): массив [цена, объем] */
-  b: OrderBookEntry[];
-  /** Временная метка */
-  ts: number;
-  /** Order book update ID */
-  u: number;
-  /** Счётчик изменений */
-  seq: number;
-}
-
-export interface BybitOrderbookResponse {
-  retCode: number;
-  retMsg: string;
-  result: BybitOrderbookResult;
-  retExtInfo: Record<string, unknown>;
-  time: number;
-}
 // RTK -------
 export type BackendResponse = {
     tickers: CoinsData[];
     btcData: CoinsData;
 }
-export interface OrderBookData {
-  bids: [string, number | string][];
-  asks: [string, number | string][];
-  time: number;
-}
-export type OrdersBookResponse = Record<string, OrderBookData>;
 
 export interface OriginalResponse {
     tickers: ReturnType<typeof tickerParser>;
@@ -161,8 +124,9 @@ export type HeatMapData = {
 
 export interface FullTickerProps extends TickerProps{
     col: IDashboardHeaderItems[];
-    src: string
-    item: MarketData
+    src: string;
+    item: MarketData;
+    panelIndex: number;
 }
 
 interface itemList{
@@ -174,3 +138,29 @@ interface itemList{
 export type NamedMarketDataLists = {
   [listName: string]: itemList;
 };
+
+export interface Layout{
+   rows: number;
+   col: number;
+   side: 'right' | 'left' | 'top' | 'bottom' | '';
+}
+
+export interface OptionsScreen {
+    greed: number;
+    screens: number;
+    direction: 'horizontal' | 'vertical';
+    layout: Layout;
+}
+
+export interface AllDataCoin {
+    chartSettings: chartSettings;
+    CoinData: DefaultCoin & {
+    src: string;
+    symbol: string;
+    };
+    isLogo: boolean;
+    storeList: NamedMarketDataLists;
+    activeList: string;
+    markers: Record<string, string>
+    isActive: boolean;
+}

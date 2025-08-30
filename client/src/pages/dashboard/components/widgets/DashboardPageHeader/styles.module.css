@@ -1,28 +1,26 @@
 .header{
-    padding: 20px;
+    height: 10%;
+    display: flex;
+    align-items: center;
     width: 100%;
     background: var(--color-bg-panel);
     color: var(--color-text-primary);
 }
 .buttons{
     display: flex;
+    margin-right: 30px;
     gap: 10px;
 }
 .btn{
-    padding: 5px;
-    background-color: transparent;
-    border: none;
-    border: 2px solid transparent;
-     border-radius: 4px;
-    color: var(--color-text-primary);
-    font-size: 18px;
-    transition: 0.3s ease-out;
+    border: 2px solid oklch(44.6% 0.03 256.802);
+    color: oklch(44.6% 0.03 256.802);
     cursor: pointer;
 }
 .btn:hover{
-    background-color: var(--color-grid);
+    color: oklch(78.087% 0.04354 258.405);
+    border: 2px solid oklch(78.087% 0.04354 258.405);
 }
-
 .active{
-    border: 2px solid var(--color-grid);
+    border: 2px solid oklch(48.8% 0.243 264.376);
+    color: oklch(48.8% 0.243 264.376);
 }

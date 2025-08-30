@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { BackendResponse,  HeatMapData,  OrdersBookResponse, OriginalResponse } from '@/pages/dashboard/types';
+import { BackendResponse,  HeatMapData, OriginalResponse } from '@/pages/dashboard/types';
 import { tickerParser, dataKlinesParser, dataValumeParser, defaultCoinParser} from '@/pages/dashboard/utils/Parser';
-    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+import { CurrentPrice, OrdersBookResponse } from '@/pages/ordersBookPage/types';
+
 export const coinsApi = createApi({
     reducerPath: 'coinsApi',
-baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
+    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({
             query: () => 'api/get-futures',
@@ -14,12 +16,26 @@ baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }
             }),
         }),
         // getOrdersbook: builder.mutation<Record<string, OrderBookData>, {n: number}>({
-        getOrdersbook: builder.query<OrdersBookResponse, void>({
-            query: () => 'api/new-orders',
-
+        getOrdersbook: builder.mutation<OrdersBookResponse, {minValue: number; range: number}>({
+            query: (body) => ({
+                url: '/api/new-orders',
+                method: 'POST',
+                body
+            }),
             transformResponse: (result: OrdersBookResponse) => {
                 const ordersBook = result;
-                return ordersBook
+                return ordersBook 
+            }
+        }),
+        updateOrdersBookTickersData: builder.mutation<CurrentPrice[], string[]>({
+            query: (body) => ({
+                url: '/api/update-ticker',
+                method: 'POST',
+                body
+            }),
+            transformResponse: (result: CurrentPrice[]) => {
+                const updetedPrices = result;
+                return updetedPrices 
             }
         }),
         getHeatMap: builder.query<HeatMapData, void>({
@@ -45,4 +61,4 @@ baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }
     })
 })
 
-export const { useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookQuery, useGetHeatMapQuery } = coinsApi
+export const { useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi

@@ -1,194 +1,350 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MarketData, NamedMarketDataLists } from "@/pages/dashboard/types";
-import { DEFAULT_CHART_SETTINGS,
-  DEFAULT_COIN_OPTION,
-  DefaultCoin,
-  chartSettings
+import {MarketData} from "@/pages/dashboard/types";
+import {
+  DefaultCoin
  } from "../constants/defaultSettings";
+import { screen, screenData, ScreenGroup } from "../constants/screenData";
+import { IconKey } from "@/shared/components/Icons/getIconsOfDiologToolBars";
 
 export interface CoinsState {
-  chartSettings: chartSettings;
-  CoinData: DefaultCoin & {
-    src: string;
-    symbol: string;
-  };
-  isLogo: boolean;
-  storeList: NamedMarketDataLists;
-  activeList: string;
-  markers: Record<string, string>
+  allscreens: ScreenGroup[];
+  mainScreen: number;
+  panelActiveId: number;
+  activePanelBtn: IconKey;
+  panelIndex: number;
+  fullscreenChartId: number | null;
 }
 
 const initialState: CoinsState = {
-  chartSettings: DEFAULT_CHART_SETTINGS,
-  CoinData: {
-    ...DEFAULT_COIN_OPTION,
-    src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg',
-    symbol: 'BTCUSDT'
-  },
-  isLogo: true,
-    storeList: {
-    List: {
-      item: [],
-      color: '',
-      colorName: ''
-    },
-    Красный: {
-      item: [],
-      color: '#c51919',
-      colorName: 'red',
-    },
-    Синий: {
-      item: [],
-      color: '#192dc5',
-      colorName: 'blue'
-    },
-    Зеленный: {
-      item: [],
-      color: '#19c56c',
-      colorName: 'green'
-    }, 
-    Розовый: {
-      item: [],
-      color: '#c51986',
-      colorName: 'pink'
-    }, 
-  },
-  activeList: 'List',
-  markers: {
-
-  }
+  allscreens: [screen],
+  mainScreen: 0,
+  panelActiveId: 0,
+  activePanelBtn: 'btn-1',
+  panelIndex: 0,
+  fullscreenChartId: null
 };
 
 export const coins = createSlice({
   name: 'coins',
   initialState,
   reducers: {
-  defaultLoading: (state, action: PayloadAction<DefaultCoin>) => { state.CoinData = {
-            ...state.CoinData,
-    ask1Price: action.payload.ask1Price,
-    bid1Price: action.payload.bid1Price
-    }
+  setuFullscreen:  (state, action: PayloadAction<number | null>) => {
+    state.fullscreenChartId = action.payload;
   },
-  coinListUpdate:(state, action: PayloadAction<{item: MarketData, marker: string}>) => {
-    const {item, marker} = action.payload;
-
-    Object.keys(state.storeList).forEach((listKey) => {
-    if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(listKey)) return
-    const list = state.storeList[listKey];
-    list.item = list.item.filter((coin) => coin.symbol !== item.symbol);
-
-    if (list.color === marker) {
-      list.item.push({
-        ...item,
-        marker: marker
-      });
-    }
-
-    });
-    
+  setActivePanelIndex:  (state, action: PayloadAction<number>) => {
+    state.panelIndex = action.payload;
   },
-  addCoinToList: (state, action: PayloadAction<{item: MarketData, list: string}>) => {
-    const {item, list} = action.payload;
-    const targetList = list ?? state.activeList;
-    const marker = state.markers[item.symbol] || '';
-
-  if (targetList) {
-    const alreadyAddedToTarget = state.storeList[targetList].item.some(
-      coin => coin.symbol === item.symbol
-  );
-
-  if (!alreadyAddedToTarget) {
-    state.storeList[targetList].item.push({
-      ...item,
-      marker: marker
-    });
-  }
-
-  Object.keys(state.storeList).forEach((listKey) => {
-    if (
-      state.storeList[listKey].color === marker &&
-      listKey !== targetList && // ← Prevent duplicate push
-      !state.storeList[listKey].item.some(coin => coin.symbol === item.symbol)
-    ) {
-      state.storeList[listKey].item.push({
-        ...item
-      });
-    }
+  defaultLoading: (state, action: PayloadAction<DefaultCoin>) => { 
+    state.allscreens.forEach(screen => {
+      screen.screens.forEach(el => {
+        el.CoinData = {
+          ...el.CoinData,
+          ask1Price: action.payload.ask1Price,
+          bid1Price: action.payload.bid1Price
+        }
+      })
+    })
+  },
+  newScreen:(state, action: PayloadAction<{height: number, layoutSide: 'right' | 'left' | 'top' | 'bottom' | '', layoutCol: number, layoutRow: number, count: number, direction: 'horizontal' | 'vertical', screenid: number, panelIndex: number, greed: number}>) => {
+  const {greed, count, direction, screenid, panelIndex, height, layoutRow, layoutCol, layoutSide} = action.payload;
+  
+  state.allscreens.forEach(screen => {
+    screen.screens.forEach(el => {
+      el.isActive = false
+    })
   });
-}
 
+  // const safePanelIndex = Math.min(panelIndex, count - 1);
+
+  const newScreens = Array.from({ length: count }).map((_, i) => ({
+    ...screenData,
+    isActive: i === panelIndex 
+  }));
+
+  // const newScreens = Array.from({ length: count }).map((_, i) => ({
+  //   ...screenData,
+  //   isActive: i === safePanelIndex
+  // }));
+
+  const newItem = {
+    id: screenid,
+      screens: newScreens,
+      screenOptions: {
+      greed: greed,
+      screens: count,
+      direction: direction,
+      layout: {rows: layoutRow, col: layoutCol, side: layoutSide},
+      height: height
+    }
+  };
+
+  state.allscreens.push(newItem);   
   },
-
-  addMarker: (state, action: PayloadAction<{symbol: string, marker: string}>) => {
-      const { symbol, marker } = action.payload;
-      state.markers[symbol] = marker;
-      const listName = state.activeList;
-      const coin = state.storeList[listName].item.find((item) => item.symbol === symbol);
-
-      if (coin) {
-        coin.marker = marker;
-      }
-
+  setMainScreen: (state, action: PayloadAction<number>) => {
+    state.mainScreen = action.payload
   },
-  removeMarker: (state, action: PayloadAction<{ symbol: string }>) => {
-      delete state.markers[action.payload.symbol];
+  setActivePanelIcon: (state, action: PayloadAction<{name: IconKey}>) => {
+    const IconName = action.payload.name;
+    state.activePanelBtn = IconName;
   },
-  delCoin: (state, action: PayloadAction<MarketData>) => {
-    const listName = state.activeList;
-    const coin = action.payload;
-    state.storeList[listName].item = state.storeList[listName].item.filter(item => item.symbol !== coin.symbol);
+  setActivePanel: (state, action: PayloadAction<{ screenid: number; panelIndex: number }>) => {
+      const { panelIndex } = action.payload;
+      state.panelActiveId = panelIndex;
+  },
+  coinListUpdate:(state, action: PayloadAction<{screenId: number, item: MarketData, marker: string, index: number}>) => {
+    const {item, marker, index, screenId} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[index];
+    if(!activedState) return
+
+    Object.keys(activedState.storeList).forEach((listKey) => {
+      if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(listKey)) return
+      const list = activedState.storeList[listKey];
+      list.item = list.item.filter((coin) => coin.symbol !== item.symbol);
+      if (list.color === marker) {
+          list.item.push({
+            ...item,
+            marker: marker
+          });
+        }
+    })
+
+    //   Object.keys(screen.storeList).forEach((listKey) => {
+    //     if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(listKey)) return
+    //     const list = screen.storeList[listKey];
+    //     list.item = list.item.filter((coin) => coin.symbol !== item.symbol);
+    //     if (list.color === marker) {
+    //       list.item.push({
+    //         ...item,
+    //         marker: marker
+    //       });
+    //     }
+    //   });
+    // });
+      
+    // state.allscreens.forEach(screenGroup => {
+      //   screenGroup.screens.forEach(screen => {
+      //     Object.keys(screen.storeList).forEach((listKey) => {
+      //       if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(listKey)) return
+      //       const list = screen.storeList[listKey];
+      //       list.item = list.item.filter((coin) => coin.symbol !== item.symbol);
+      //       if (list.color === marker) {
+      //         list.item.push({
+      //           ...item,
+      //           marker: marker
+      //         });
+      //       }
+      //     });
+      //   });
+      // },
+      // );
+  },
+  addCoinToList: (state, action: PayloadAction<{panelIndex: number, item: MarketData, list: string, screenId: number}>) => {
+    const {item, list, screenId, panelIndex} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activeState = activeArray?.screens[panelIndex];
+    const targetArray = activeState?.storeList[list].item;
+
+    targetArray?.push({
+          ...item
+    })
+
+    // activeArray?.screens.forEach((key) => {
+    //   const targetList = key.activeList ?? list;
+    //   const marker = key.markers[item.symbol]|| '';
+      
+    //   if (targetList) {
+    //   const alreadyAddedToTarget = key.storeList[targetList].item.some(
+    //     coin => coin.symbol === item.symbol
+    //   );
+
+    //   if (!alreadyAddedToTarget) {
+    //     key.storeList[targetList].item.push({
+    //       ...item,
+    //       marker: marker
+    //     });
+    //   }
+    //   Object.keys(key.storeList).forEach((listKey) => {
+    //       if (
+    //         key.storeList[listKey].color === marker &&
+    //         listKey !== targetList && // ← Prevent duplicate push
+    //         !key.storeList[listKey].item.some(coin => coin.symbol === item.symbol)&&
+    //         key.storeList[listKey].color != ""
+    //       ) {
+    //         key.storeList[listKey].item.push({
+    //           ...item
+    //         });
+    //         }
+    //   });
+    //   }
+    // })
+    // --------------
+  // const { item, list, screenId, panelIndex } = action.payload;
+  // const activeArray = state.allscreens.find(arr => arr.id === screenId);
+
+  // if (!activeArray) return;
+
+  // const screen = activeArray.screens[panelIndex];
+  // if (!screen) return;
+
+  // const targetList = screen.activeList ?? list;
+  // const marker = screen.markers[item.symbol] || '';
+
+  // const alreadyAddedToTarget = screen.storeList[targetList].item.some(
+  //   coin => coin.symbol === item.symbol
+  // );
+
+  // if (!alreadyAddedToTarget) {
+  //   screen.storeList[targetList].item.push({
+  //     ...item,
+  //     marker: marker
+  //   });
+  // }
+
+  // // если нужно учитывать цветовые маркеры
+  // Object.keys(screen.storeList).forEach(listKey => {
+  //   if (
+  //     screen.storeList[listKey].color === marker &&
+  //     listKey !== targetList &&
+  //     !screen.storeList[listKey].item.some(coin => coin.symbol === item.symbol) &&
+  //     screen.storeList[listKey].color !== ''
+  //   ) {
+  //     screen.storeList[listKey].item.push({
+  //       ...item
+  //     });
+  //   }
+  // });
+  },
+  addMarker: (state, action: PayloadAction<{symbol: string, marker: string, screenId: number, panelIndex: number}>) => {
+      const { symbol, marker, screenId, panelIndex} = action.payload;
+      const activeArray = state.allscreens.find(arr => arr.id === screenId);
+      const activedState = activeArray?.screens[panelIndex];
+
+      if(!activedState) return
+        activedState.markers[symbol] = marker;
+        const listName = activedState.activeList;
+        const coin = activedState.storeList[listName].item.find((item) => item.symbol === symbol);
+        if (coin) {
+          coin.marker = marker;
+        }
+  },
+  removeMarker: (state, action: PayloadAction<{ symbol: string, screenId: number,  panelIndex: number}>) => {
+      const { symbol, screenId, panelIndex} = action.payload;
+      const activeArray = state.allscreens.find(arr => arr.id === screenId);
+      const activedState = activeArray?.screens[panelIndex];
+      if(!activedState) return
+      delete activedState.markers[symbol];
+  },
+  delCoin: (state, action: PayloadAction<{item: MarketData, screenId: number, panelIndex: number}>) => {
+    const {item, screenId, panelIndex} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return
+    const listName = activedState.activeList;
+    const coin = item;
+    activedState.storeList[listName].item = activedState.storeList[listName].item.filter(item => item.symbol !== coin.symbol);
   },
   addChart: (state, action: PayloadAction<{ 
     symbol: string,
     src: string,
     ask1Price: string,
-    bid1Price: string
+    bid1Price: string,
+    screenId: number,
+    panelIndex: number
   }>) => {
-    state.CoinData = {
-      ...state.CoinData,
-      symbol: action.payload.symbol,
-      src: action.payload.src,
-      ask1Price: action.payload.ask1Price,
-      bid1Price: action.payload.bid1Price
+    const {screenId, symbol, src, ask1Price, bid1Price, panelIndex } = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return;
+    activedState.CoinData = {
+      ...activedState.CoinData,
+      symbol: symbol,
+      src: src,
+      ask1Price: ask1Price,
+      bid1Price: bid1Price
     };
-    state.chartSettings = {
-      ...state.chartSettings,
-      symbol: action.payload.symbol,
+    activedState.chartSettings = {
+      ...activedState.chartSettings,
+      symbol: symbol,
     }
   },
-  changeInterval: (state, action: PayloadAction<{interval: string}>) => {
-    state.chartSettings = {
-    ...state.chartSettings,
-    interval: action.payload.interval
-  }
+  changeInterval: (state, action: PayloadAction<{interval: string, screenId: number, panelIndex: number}>) => {
+    const {interval, screenId, panelIndex} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return;
+    activedState.chartSettings = {
+      ...activedState.chartSettings,
+      interval: interval
+      }
   },
-  checkedLogo: (state, action: PayloadAction<boolean>) => {
-    state.isLogo = action.payload
+  checkedLogo: (state, action: PayloadAction<{panelId: number, isLogo: boolean, panelIndex: number}>) => {
+    const {isLogo, panelIndex, panelId} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === panelId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return;
+    activedState.isLogo = isLogo;
+    // state.allscreens.forEach(screen => {
+    //   screen.screens.forEach(el => {
+    //     el.isLogo = action.payload
+    //   })
+    // })
+
   },
-  createNewList: (state, action: PayloadAction<{listName: string, item?: MarketData}>) => {
-    const {listName, item } = action.payload
-      if (!state.storeList[listName]) {
-        state.storeList[listName] = {
+  createNewList: (state, action: PayloadAction<{panelIndex: number, listName: string, item?: MarketData, screenId?: number}>) => {
+    const {listName, item, screenId, panelIndex} = action.payload
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    
+    const activedState = activeArray?.screens[panelIndex];
+    if(activedState){
+      if (!activedState.storeList[listName]) {
+          activedState.storeList[listName] = {
           item: item ? [item] : [],
           color: '',
           colorName: ''
         };
       }
+    }
   },
-  setActiveList: (state, action: PayloadAction<string>) => {
-    state.activeList = action.payload
+  setActiveList: (state, action: PayloadAction<{listName: string, screenId: number, panelIndex: number}>) => {
+    const {screenId, listName, panelIndex} = action.payload;
+    const activeArrayState = state.allscreens.find(arr => arr.id === screenId);
+    if (activeArrayState?.screens?.[panelIndex]) {
+      activeArrayState.screens[panelIndex].activeList = listName;
+    }
   },
-    listCleaner: (state, action: PayloadAction<string>) => {
-    const listName = action.payload;
-    state.storeList[listName].item = [];
+  listCleaner: (state, action: PayloadAction<{activeList?: string, screenId: number, panelIndex: number}>) => {
+    const {activeList, screenId, panelIndex} = action.payload
+    const listName = activeList;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    if(!activeArray) return
+    const activedState = activeArray.screens[panelIndex];
+ 
+    if (listName && activedState) {
+      const targetList = activedState.storeList[listName];
+      if (targetList) {
+        targetList.item = [];
+      } else {
+        console.warn(`listCleaner: storeList[${listName}] не найден`, activedState.storeList);
+      }
+    }
   },
-  listRemover: (state, action: PayloadAction<string>) => {
-    const remoovedList = action.payload;
-    delete state.storeList[remoovedList]
+  listRemover: (state, action: PayloadAction<{screenId: number, list: string, panelIndex: number}>) => {
+    const {list, screenId, panelIndex} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return;
+    delete activedState.storeList[list]
   }
 }})
 
 export const {
+  setuFullscreen,
+  setActivePanelIndex,
+  setActivePanelIcon,
+  setActivePanel,
+  setMainScreen,
+  newScreen,
   coinListUpdate,
   removeMarker,
   addMarker,
@@ -201,5 +357,10 @@ export const {
   defaultLoading, 
   changeInterval, 
   checkedLogo, 
-  createNewList} = coins.actions
+  createNewList
+} = coins.actions
+
+
+
+
 

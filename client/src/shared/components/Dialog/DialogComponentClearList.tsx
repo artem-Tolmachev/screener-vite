@@ -15,8 +15,16 @@ import { listCleaner } from "@/pages/dashboard/coinData/slices/CoinsSlice"
 import { useAppDispatch, useAppSelector } from "@/app/store/store"
 
 export default function  DialogComponentClearList() {
-    const activedList = useAppSelector(store => store.coins.activeList)
-    const dispatch = useAppDispatch()
+    const screenId = useAppSelector(store => store.coins.mainScreen);
+    const screenOptionGroop = useAppSelector(state => state.coins.allscreens);
+    const ativeArray = screenOptionGroop.find(el => el.id === screenId);
+    const panelIndex = useAppSelector(store => store.coins.panelIndex);
+
+    if(!ativeArray) return;
+    const activedListData = ativeArray.screens[panelIndex]
+    const activeList = activedListData?.activeList;
+    const dispatch = useAppDispatch();
+
     return (
             <Dialog >
               <DialogTrigger asChild>
@@ -41,7 +49,7 @@ export default function  DialogComponentClearList() {
                 </div>
                 <DialogFooter className="sm:justify-start">
                   <DialogClose asChild>
-                    <Button onClick={() => dispatch(listCleaner(activedList))} type="button" variant="secondary" className="bg-gray-800 text-neutral-50 hover:bg-gray-700">
+                    <Button onClick={() => dispatch(listCleaner({activeList, screenId, panelIndex}))} type="button" variant="secondary" className="bg-gray-800 text-neutral-50 hover:bg-gray-700">
                       Да
                     </Button>
                   </DialogClose>

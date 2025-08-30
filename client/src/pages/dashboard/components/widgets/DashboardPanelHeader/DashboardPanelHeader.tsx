@@ -3,7 +3,7 @@ import CustomCheckbox from '@/shared/components/CustomCheckbox/CustomCheckbox';
 import PopupSettings from '../PopupSettings/PopupSettings';
 import { IDashboardHeaderItems } from '@/pages/dashboard/types';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '@/app/store/store';
+import { useAppDispatch, useAppSelector } from '@/app/store/store';
 import { checkedLogo } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import DashboardSettings from '@/pages/dashboard/components/ui/DashboardButtons/DashboardButtons';
 
@@ -12,24 +12,30 @@ interface Props {
     onToggleModal: (arg: string | boolean) => void;
     columns: IDashboardHeaderItems[];
     toggleCheckBox: (arg: string) => void;
+    panelIndex: number;
 }
-const DashboardPanelHeader = ({ isOpen, onToggleModal, columns, toggleCheckBox }: Props) => {
+
+const DashboardPanelHeader = ({panelIndex, isOpen, onToggleModal, columns, toggleCheckBox}: Props) => {
     const [logoVisible, setLogoVisible] = useState<1 | 0>(1);
+    const panelId = useAppSelector(store => store.coins.mainScreen);
     const dispatchLogo = useAppDispatch();
-    
+
     useEffect(() => {
-        dispatchLogo(checkedLogo(logoVisible === 1));
+        dispatchLogo(checkedLogo({isLogo: (logoVisible === 1), panelIndex, panelId}));
     }, [logoVisible]);
 
     return (
         <div className={styles.header}>
-            <DashboardSettings onToggleModal={onToggleModal} />
+            <DashboardSettings 
+                onToggleModal={onToggleModal}
+                panelIndex={panelIndex}
+            />
             {isOpen === 'settings'
                 && <PopupSettings
-                    isOpen={isOpen}
-                    onToggleModal={onToggleModal}
-                    setLogoVisible={setLogoVisible}
-                    logoVisible={logoVisible}
+                        isOpen={isOpen}
+                        onToggleModal={onToggleModal}
+                        setLogoVisible={setLogoVisible}
+                        logoVisible={logoVisible}
                 >
                     {columns.map((checked) => (
                         <CustomCheckbox

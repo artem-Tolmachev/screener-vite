@@ -17,7 +17,6 @@ export default function DialogRadioButtons() {
               </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md bg-gray-600" hideCloseIcon>
-                {/* <RadioButtonsComponent/> */}
                   <DialogTitle className="sr-only">Подтвердите действия</DialogTitle>
                   <DialogDescription className="sr-only"></DialogDescription>
               </DialogContent>

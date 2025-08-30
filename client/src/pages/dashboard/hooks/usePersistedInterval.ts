@@ -11,7 +11,8 @@ export const usePersistedInterval = (item: string) => {
             const parsedRoot = JSON.parse(rawFromLocalStorage);
             const coinsString = parsedRoot.coins;
             const coinsData = JSON.parse(coinsString);
-            setPersistedItem(coinsData.chartSettings[item]);
+            // setPersistedItem(coinsData.allscreens.screens[0].chartSettings[item]);
+            
           } catch (e) {
             console.error('Ошибка при парсинге localStorage:', e);
           }

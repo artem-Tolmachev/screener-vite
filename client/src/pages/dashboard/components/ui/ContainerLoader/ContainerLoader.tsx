@@ -9,34 +9,39 @@ type ItemData = {
   itemStatusMap: { [index: number]: number };
   LOADED: number;
   LOADING: number;
-  closeAddModal: (arg: boolean) => void;
+  panelIndex: number;
 };
 
-const ContainerLoader = ({ data, index, style}:
+const ContainerLoader = ({data, index, style}:
   ListChildComponentProps<ItemData>
 ) => {
   const item = data.items[index];
   const isLoaded = data.itemStatusMap[index] === data.LOADED;
-
-  const {addCoin, deliteCoin, exist} = useTickerActions({item})
+  const tickerActions = useTickerActions({item});
+  let panelIndex = data.panelIndex;
+  
+  if (!tickerActions) {
+    return null; 
+  }
+  const {exist, addCoin, deliteCoin} = tickerActions;
 
   return (
-    <div style={{...style, alignItems: 'center'}}>
+      <div className='www' style={{...style, alignItems: 'center'}}>
         {isLoaded && item ? (
-        <TickerItem
-          coinData={item}
-          addCoin={addCoin}
-          deliteCoin={deliteCoin}
-          key={item.symbol}
-          symbol={item.symbol}
-          src={item.src}
-          flag={exist}
-          closeModal={data.closeAddModal}
+           <TickerItem
+              coinData={item}
+              key={item.symbol} 
+              symbol={item.symbol}
+              src={item.src}
+              flag={exist}
+              addCoin={addCoin}
+              deliteCoin={deliteCoin}
+              panelIndex={panelIndex}
         />
         ) : (
           <TickerSckeleton/>
         )}
-    </div>
+      </div>
   );
 };
 export default ContainerLoader;

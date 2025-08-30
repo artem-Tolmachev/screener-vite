@@ -6,27 +6,28 @@ function Layout() {
 
   const navArray = {
     "График": "/",
-    "Посты": "/posts",
+    // "Посты": "/posts",
     "Ликвидность": "/orders"
   };
 
     return (
         <>
-            <header className="flex items-center justify-center bg-blue-950" >
-                <div className="flex justify-between items-center w-[50%] h-[80px] ">
+            <header className="flex items-center justify-center bg-blue-950">
+                <div className="flex justify-between items-center w-[100%] h-[80px]">
                     {Object.entries(navArray).map(([text, path]) => (
-                    <NavLink  
-                        key={path} 
-                        to={path}
-                        className={({ isActive }) => 
-                            cn("header-link", isActive && "active-header-link")
-                        }
-                        >
+                    <div className='w-[50%] h-full text-center' key={path + 1} >
+                        <NavLink  
+                            key={path} 
+                            to={path}
+                            className={({ isActive }) => cn("header-link", isActive && "active-header-link")}
+                            >
                             {text}
-                    </NavLink>))}
+                        </NavLink>
+                    </div>
+                ))}
                 </div>
             </header>
-            <main className='flex h-full flex-col'>
+            <main className='flex h-[90%] flex-col'>
                 <Outlet/>
             </main>
             {!hideFooter && 'Footer'}

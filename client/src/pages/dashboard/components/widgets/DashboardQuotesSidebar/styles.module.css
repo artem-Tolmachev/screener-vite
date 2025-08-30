@@ -1,12 +1,14 @@
-
 .dashbord_right {
+    padding-bottom: 10px;
     display: flex;
     flex-direction: column;
+    height: 100%;
     border-radius: var(--border-block);
     color: var(--color-text-primary);
     box-sizing: border-box;
     z-index: 2;
 }
+
 .header {
     display: flex;
 }

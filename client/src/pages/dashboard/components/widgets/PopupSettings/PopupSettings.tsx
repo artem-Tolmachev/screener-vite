@@ -33,7 +33,7 @@ function PopupSettings({isOpen, onToggleModal, children, setLogoVisible, logoVis
   }, [isOpen]);
 
   return (
-    <div ref={popupRef} className="bg-gray-900 w-50 p-4 absolute left-1/2 -translate-x-1/2 top-1/2 z-10">
+    <div ref={popupRef} className="bg-gray-800 text-gray-300 w-50 p-4 absolute left-1/2 -translate-x-1/2 top-1/2 z-10">
       <h3 className={styles.settingTitle}>НАСТРОЙКА СТОЛБЦОВ</h3>
       <div>
         {children}

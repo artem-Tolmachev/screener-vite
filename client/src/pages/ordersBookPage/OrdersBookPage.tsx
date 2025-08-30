@@ -1,53 +1,103 @@
-import styles from './styles.module.css';
-import { useGetOrdersbookQuery } from "@/pages/dashboard/coinData/services/getApiCoins";
+import { useAppSelector } from '@/app/store/store';
+import SettingSection from './SettingSection/SettingSection';
+import { useGetOrdersbookMutation, useUpdateOrdersBookTickersDataMutation } from "@/pages/dashboard/coinData/services/getApiCoins";
+import { useEffect, useState } from 'react';
+import { TableOrderBook } from '@/shared/components/Table/TableOrderBook';
+import { PaginationOderBookPage } from '@/shared/components/Pagination/PaginationOderBookPage';
+import { getOrderRows } from './helpers/getOrderRows';
+import OrdersBookPageSkeleton from '@/shared/components/Skeleton/OrdersBookPageSkeleton';
+import { useCollums } from '../dashboard/hooks/useCollums';
 
 const OrdersBookPage = () => {
+const filter = useAppSelector((state) => state.ordersBook.ordersFilter);
+const [getOrdersbook, {data, isLoading} ] = useGetOrdersbookMutation();
+const [updateOrdersBookTickersData, {data: updateTickers}] = useUpdateOrdersBookTickersDataMutation();
+const updatedPrice = updateTickers ?? [];
+const orders = data ? Object.keys(data) : [];
+const [countOfOrders, setCountOfOrders] = useState(0);
+const [radioBtn, setRadioBtn] = useState("all"); 
+const { columns, toggleCheckBox, hideAllColumns}  = useCollums([
+    { key: 'symbol', name: 'Пара', visible: 1 },
+    { key: 'distance', name: 'Расстояние до заявки (%)', visible: 1 },
+    { key: 'duration', name: 'Длительность заявки', visible: 1 },
+    { key: 'type', name: 'Тип заявки', visible: 1 },
+    { key: 'volume', name: 'Объем заявки в монетах', visible: 1 },
+    { key: 'volume$', name: 'Объем заявки в ($)', visible: 1 },
+    { key: 'price', name: 'Цена инструмента', visible: 1 },
+])
 
-    const { data, error, isLoading } = useGetOrdersbookQuery();
+const PAGE_SIZE = 10
+const [currentPage, setCurrentPage] = useState(1);
+const startIndex = (currentPage - 1) * PAGE_SIZE;
+const countOfPage = Math.ceil(countOfOrders / PAGE_SIZE);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {JSON.stringify(error)}</div>;
+const allRows = getOrderRows({orders, updatedPrice, data, columns, radioBtn})
+const paginatedRows = allRows.slice(startIndex, startIndex + PAGE_SIZE);
 
-    const orders = data ? Object.keys(data) : [];
+useEffect(() => {
+    const fetch = async () => {
+        try {
+            await getOrdersbook(filter).unwrap(); 
+        } catch (err) {
+            console.error('Ошибка при получении ордербука:', err);
+        }
+    };
+    fetch();
+}, [filter, getOrdersbook]);
 
-    function formatDate(time: number){
-        const diffMs = Date.now() - time;
-        const diffMinutes = diffMs / (1000 * 60);
-        const hours = Math.floor(diffMinutes / 60);
-        const minutes = (diffMinutes % 60).toFixed(0);
-        const formatted = `${hours}h ${minutes}m`;
+useEffect(() => {
+    updateOrdersBookTickersData(orders)
+    const interval = setInterval(() => {updateOrdersBookTickersData(orders)}, 50000)
+    return () => clearInterval(interval)
+}, [data]);
 
-        return formatted;
-    }
+useEffect(() => {
+    if (!data) return;
+    setCountOfOrders(allRows.length)
+    setCurrentPage(1)
+}, [allRows.length]);
+
+if (isLoading) return (
+<>
+    <SettingSection 
+        toggleCheckBox={toggleCheckBox} 
+        columnsOfTable={columns}
+        radioBtn={radioBtn}
+        setRadioBtn={setRadioBtn}
+        hideAllColumns={hideAllColumns}
+    />
+    <OrdersBookPageSkeleton/>
+</>);
 
     return (
-        <>
-            {orders.map(symbol => (
-                <div key={symbol}>
-                    {data && data[symbol].bids.map((bid, idx) => (
-                        <div className={styles.row} key={idx}>
-                            <div >{symbol}</div>
-                            <div className={styles.bid}>Покупка</div>
-                            <div>Цена: {Number(bid[0]).toFixed(4)}</div>
-                            <div>Кол-во:  {Number(bid[1]).toLocaleString()}</div>
-                            <div className={styles.bidSum}>{(Number(bid[0])* Number(bid[1])).toLocaleString(undefined, {maximumFractionDigits:2})}</div>
-                             <div>{formatDate(data[symbol].time)}</div>
-                        </div>
-                    ))}
-                    {data && data[symbol].asks.map((ask, idx) => (
-                        <div className={styles.row} key={idx}>
-                            <div >{symbol}</div>
-                            <div className={styles.ask}>Продажа</div>
-                            <div>Цена: {Number(ask[0]).toFixed(4)}</div>
-                            <div>Кол-во:  {Number(ask[1]).toLocaleString()}</div>
-                            <div className={styles.askSum}>{(Number(ask[0])* Number(ask[1])).toLocaleString(undefined, {maximumFractionDigits:2})}</div>
-                            <div>{formatDate(data[symbol].time)}</div>
-                        </div>
-                    ))}
-                </div> 
-            ))}
-        </>
+        <div className='h-full'>
+            <SettingSection 
+                columnsOfTable={columns} 
+                toggleCheckBox={toggleCheckBox}
+                radioBtn={radioBtn}
+                setRadioBtn={setRadioBtn}
+                hideAllColumns={hideAllColumns}
+            />
+            <div className='wr-table p-3 bg-blue-950 box-border h-full'>
+            {allRows.length === 0 
+                ?<div className='flex justify-center mb-2 w-full'>
+                    <div className='p-3 bg-gray-700 w-fit'>
+                        <p className='text-[18px] text-gray-100'>Записей с текущими настройками не найдено</p>
+                    </div>
+                </div>
+                :<PaginationOderBookPage 
+                    setCurrentPage={setCurrentPage} 
+                    currentPage={currentPage}
+                    countOfPage={countOfPage}
+                />
+            }
+                <TableOrderBook columns={columns} paginatedRows={paginatedRows}/>
+            </div>
+        </div>
     )
 };
 
 export default OrdersBookPage
+
+
+

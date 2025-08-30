@@ -3,17 +3,26 @@ import styles from './styles.module.css';
 import { useAppSelector } from '@/app/store/store';
 import { Tooltip } from 'react-tooltip';
 
-function TradingInfoPanel() {
-    const selectedItems = useAppSelector((store) => store.coins.CoinData);
+interface Props {
+    panelIndex: number;
+}
+
+function TradingInfoPanel({panelIndex}: Props) {
+    const screenId = useAppSelector(state => state.coins.mainScreen);
+    const allScreens = useAppSelector(state => state.coins.allscreens);
+    const ativeArray = allScreens.find(el => el.id === screenId);
+    const selectedItems = ativeArray?.screens[panelIndex].CoinData;
+    
     if (!selectedItems) {
         return <div className={styles.panel}>Загрузка...</div>;
     }
     const { src, symbol, ask1Price, bid1Price } = selectedItems;
+
     return (
         <div className={styles.panel}>
             <div className={styles.wrapper}>
                 <div className={styles.item}>
-                    <IconCoin src={src} symbol={symbol} VorceVisible={true}/>
+                    <IconCoin panelIndex={panelIndex} src={src} symbol={symbol} VorceVisible={true}/>
                 </div>
                 <div className={styles.priceInfo}>
                     <div
