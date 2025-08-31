@@ -30,7 +30,7 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
     const screenId = useAppSelector(store => store.coins.mainScreen);
 
     const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
-    const activedSymbol = usePersistedInterval('symbol');
+    const activedSymbol = usePersistedInterval();
     const isHovered = useShowHide(false);
 
     useEffect(() => {

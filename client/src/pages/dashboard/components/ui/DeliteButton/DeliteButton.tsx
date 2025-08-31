@@ -1,10 +1,11 @@
 import styles from './styles.module.css';
+import * as React from 'react';
 
 interface Props {
     onClick: () => void;
 }
 
-const DeliteButton = ({ onClick }: Props) => {
+const DeliteButton: React.FC<Props> = ({ onClick }: Props) => {
 
     function hendle(e: React.MouseEvent<HTMLSpanElement>){
         onClick();
