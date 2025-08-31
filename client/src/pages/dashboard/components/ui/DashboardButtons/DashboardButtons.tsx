@@ -2,8 +2,6 @@ import styles from './styles.module.css';
 import { DropdownMenuComponent } from '@/shared/components/DropdownMenu/DropdownMenu';
 import { DialogAddTicker } from '@/shared/components/Dialog/DialogAddTicker';
 import { Button } from '@/components/ui/button';
-import { setActivePanelIndex } from '@/pages/dashboard/coinData/slices/CoinsSlice';
-import { useAppDispatch } from '@/app/store/store';
 
 interface Props {
     onToggleModal: (arg: string)  => void;

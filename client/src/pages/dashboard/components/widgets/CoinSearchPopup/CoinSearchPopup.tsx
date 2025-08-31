@@ -1,12 +1,10 @@
 import Search from '@/shared/components/Search/Search';
 import styles from './styles.module.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Loader from '@/pages/dashboard/components/ui/Loader/Loader';
 import { MarketData } from '@/pages/dashboard/types';
 import { useDebounce } from '@/pages/dashboard/hooks/useDebounce';
 import { useFilter } from '@/pages/dashboard/hooks/useFilter';
-import { setActivePanelIndex } from '@/pages/dashboard/coinData/slices/CoinsSlice';
-import { useAppDispatch } from '@/app/store/store';
 
 interface Props {
     tickers: MarketData[];
@@ -17,8 +15,6 @@ const CoinSearchPopup = ({ tickers, panelIndex}: Props) => {
     const [value, setValue] = useState('');
     const data = useDebounce(value, 1000)
     const filtred = useFilter(data, tickers);
-    //     const panelIndex = useAppSelector(state => state.coins.panelIndex);  
-// console.log(panelIndex)
     return (
         <>
             <div className={styles.header}>

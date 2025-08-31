@@ -1,6 +1,5 @@
 import styles from './styles.module.css';
 
-
 interface Props {
     onChange: (value: string) => void;
     value: string;

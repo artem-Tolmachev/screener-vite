@@ -7,7 +7,6 @@ import { MarketData } from "@/pages/dashboard/types";
 interface Props { 
   tick: MarketData[];
   panelIndex: number;
-  // closeAddModal: (arg: boolean) => void;
 }
 
 export default function Loader({tick, panelIndex}: Props) {

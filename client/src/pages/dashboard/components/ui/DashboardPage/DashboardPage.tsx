@@ -28,33 +28,8 @@ function DashboardPage(){
   const dispatch = useAppDispatch()
   
   if(!controler) return;
-  const {screensDataArray, selectedCoin, mainScreenOption, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
+  const {screensDataArray, selectedCoin, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
   const {rows, col, side} = layout;
-
-
-// {Array.from({ length: screens - 1 }).map((_, outerIndex) => {
-
-// return (
-//   <React.Fragment  key={`outer-fragment-left-${outerIndex}`}>
-//     <ResizablePanel
-//       onMouseEnter={() => toggle(panelIndex, screenId)}
-//     ></ResizablePanel>
-  // <ResizablePanelGroup 
-  //   onClick={() => dispatch(setActivePanelIndex(panelIndex))}
-// <ResizableHandle className={`data-[panel-group-direction=vertical]:h-1 data-[panel-group-direction=horizontal]:w-1 ${screenIndex === panelIndex ? "border-2 border-blue-700" : "border-transparent border-2"}`}/>
-//     <ResizablePanel 
-//       onMouseEnter={() => toggle((screens - 1), screenId)}
-//     ></ResizablePanel>
-{/* <ResizablePanelGroup  
-  onClick={() => dispatch(setActivePanelIndex(screens - 1))}
-  ></ResizablePanelGroup> */}
-
-{/* <DashboardQuotesSidebarLazy 
-  selectedCoin={selectedCoin}
-  isActive={isActiveList[panelIndex]}
-  panelIndex={panelIndex}
-  screensDataArray={screensDataArray}
-/> */}
 
   return (
     <>

@@ -3,10 +3,9 @@ import styles from './styles.module.css';
 import DeliteButton from '../DeliteButton/DeliteButton';
 import PopupRadioButtons from '../../widgets/PopupRadioButtons/PopupRadioButtons';
 import { useHendlerMarker } from '@/pages/dashboard/hooks/useHendlerMarker';
-import { useAppDispatch, useAppSelector } from '@/app/store/store';
+import { useAppSelector } from '@/app/store/store';
 import MarkerComponent from '../MarkerComponent/MarkerComponent';
 import { MarketData } from '@/pages/dashboard/types';
-import { addCoinToList } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 
 interface Props {
     symbol: string;

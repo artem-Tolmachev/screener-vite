@@ -1,7 +1,6 @@
 import IconFlag from "../IconFlag/IconFlag"
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MarketData } from "@/pages/dashboard/types";
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { setActivePanelIndex } from "@/pages/dashboard/coinData/slices/CoinsSlice";
 

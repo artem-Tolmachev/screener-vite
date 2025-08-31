@@ -27,14 +27,11 @@ export default function DialogComponentCreateList({setListnameSelect}: Props)  {
 
   const addListToStore = useCreateNewWatchList(listName, setListname, panelIndex);
 
-  // const screenOptionGroop = useAppSelector(state => state.coins.allscreens);
   const screenId = useAppSelector(store => store.coins.mainScreen);
-  // const ativeArray = screenOptionGroop.find(el => el.id === screenId);
 
   const dispatch = useAppDispatch();
 
   function handelSave(){
-    console.log(panelIndex, listName)
     setListnameSelect(listName)
     addListToStore()
     dispatch(setActiveList({listName, panelIndex, screenId}))

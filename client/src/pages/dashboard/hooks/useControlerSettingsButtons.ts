@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { useEffect, useState } from "react";
 import { setActivePanel } from "../coinData/slices/CoinsSlice";
-// import { Dispatch, SetStateAction} from "react";
 import { AllDataCoin, Layout, MarketData } from "../types/index";
 import { ScreenGroup } from "../coinData/constants/screenData";
 

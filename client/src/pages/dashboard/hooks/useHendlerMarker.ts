@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/app/store/store";
+import { useAppDispatch } from "@/app/store/store";
 import { useState } from "react";
 import { addMarker, removeMarker } from "../coinData/slices/CoinsSlice";
 

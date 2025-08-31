@@ -1,6 +1,7 @@
 interface Props {
     marker?: string
 }
+
 const IconFlag = ({marker}:Props) => {
     let icon = marker ?? 'oklch(0.56 0.02 261.8)'
     return (

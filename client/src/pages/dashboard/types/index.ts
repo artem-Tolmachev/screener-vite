@@ -34,8 +34,6 @@ export interface CoinsData {
   marker: string;
 }
 
-// export type MarketData = 
-//   Pick<CoinsData, "turnover24h" | "volume24h" | "symbol" | "lastPrice"> & {src: string};
 export type MarketData = 
   Pick<CoinsData, 
   "turnover24h" 
