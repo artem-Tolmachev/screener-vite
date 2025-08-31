@@ -11,7 +11,7 @@ import OrdersBook from './ws/ordersBook.js';
 const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: 'https://screener-vite.vercel.app'}));
+// app.use(cors({ origin: 'https://screener-vite.vercel.app'}));
 
 app.use(cors({
   origin: (origin, callback) => {
