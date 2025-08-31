@@ -70,7 +70,7 @@ if (isLoading) return (
 </>);
 
     return (
-        <div className='h-full'>
+        <div className='h-full bg-blue-950'>
             <SettingSection 
                 columnsOfTable={columns} 
                 toggleCheckBox={toggleCheckBox}
@@ -78,7 +78,7 @@ if (isLoading) return (
                 setRadioBtn={setRadioBtn}
                 hideAllColumns={hideAllColumns}
             />
-            <div className='wr-table p-3 bg-blue-950 box-border h-full'>
+            <div className='wr-table px-3  box-border'>
             {allRows.length === 0 
                 ?<div className='flex justify-center mb-2 w-full'>
                     <div className='p-3 bg-gray-700 w-fit'>

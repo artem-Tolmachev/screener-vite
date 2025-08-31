@@ -27,7 +27,7 @@ export function DialogForm({hideAllColumns, columnsOfTable, toggleCheckBox, radi
             <IconSetting/>
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[90%] text-gray-300 p-0 border-none  bg-gray-800 h-[700px]">
+        <DialogContent className="border-1 border-white sm:max-w-[90%] text-gray-300 p-0  bg-gray-800 h-[700px]">
           <TabsSettings 
             toggleCheckBox={toggleCheckBox} 
             columnsOfTable={columnsOfTable}
