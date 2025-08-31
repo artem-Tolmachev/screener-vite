@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function DialogAddTicker({panelIndex}: Props) {
-    const { data, isLoading } = useGetCoinsQuery();
+    const { data } = useGetCoinsQuery();
     if(!data) return;
     const tickers = data?.tickers;
     const dispath = useAppDispatch()

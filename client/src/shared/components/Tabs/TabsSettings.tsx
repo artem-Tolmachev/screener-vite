@@ -16,13 +16,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { IDashboardHeaderItems } from "@/pages/dashboard/types"
-import { setFilter } from "@/pages/ordersBookPage/ordesData/slices/slicesOrdersBook"
+import { IDashboardHeaderItems } from "@/pages/dashboard/types";
+import { setFilter } from "@/pages/ordersBookPage/ordesData/slices/slicesOrdersBook";
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { useState } from "react"
-import { RadioButtonsOrderbookFilter } from "../RadioButtons/RadioButtonsOrderbookFilter"
-import { SelectOfOrderBookPage } from "../Select/SelectOfOrderBookPage"
-import { SetStateAction, Dispatch} from "react";
+import { useState } from "react";
+import { RadioButtonsOrderbookFilter } from "../RadioButtons/RadioButtonsOrderbookFilter";
+import { SelectOfOrderBookPage } from "../Select/SelectOfOrderBookPage";
+
 interface Props {
   columnsOfTable: IDashboardHeaderItems[];
   toggleCheckBox: (arg: string) => void;

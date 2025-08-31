@@ -1,4 +1,4 @@
-import { AllDataCoin, OptionsScreen, Layout } from "../../types";
+import { AllDataCoin, OptionsScreen } from "../../types";
 import { DEFAULT_CHART_SETTINGS, DEFAULT_COIN_OPTION } from "./defaultSettings";
 export type ScreenData = typeof screenData;
 
