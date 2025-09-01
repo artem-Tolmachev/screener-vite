@@ -1,9 +1,9 @@
-import express from 'express';
-import axios from 'axios';
+// import express from 'express';
+// import axios from 'axios';
 
-const router = express.Router();
-const TICKERS_URL = 'https://api.bybit.com/v5/market/tickers?category=linear';
-let isSocketReady = false;
+// const router = express.Router();
+// const TICKERS_URL = 'https://api.bybit.com/v5/market/tickers?category=linear';
+// let isSocketReady = false;
 
 // app.post('/get-ordersbook', async (req, res) => {
 //   try {
