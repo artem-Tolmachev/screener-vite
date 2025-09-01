@@ -10,26 +10,15 @@ import OrdersBook from './ws/ordersBook.js';
 
 const PORT = process.env.PORT || 5000;
 const app = express();
-app.use(express.json());
 
-// app.use(cors({
-//   origin: (origin, callback) => {
-//     const allowedOrigins = ['http://localhost:5173', 'https://screener-vite.vercel.app'];
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
+// http://localhost:5173
+//'https://screener-vite.vercel.app'
 
 app.use(cors({
-  origin: ['https://screener-vite.vercel.app'], 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // если нужны куки или авторизация
+  origin: ['https://screener-vite.vercel.app']
 }));
 
-
+app.use(express.json());
 app.use('/api', futures);
 app.use('/api', klines);
 app.use('/api', fetchNewOrderBook);
@@ -37,5 +26,4 @@ app.use('/api', fetchNewHeatMap)
 app.use('/api', fetchTickersForOrderBook)
 
 OrdersBook(app);
-
 app.listen(PORT, () => console.log(`🟢 Сервер стартовал на http://localhost:${PORT}`));
