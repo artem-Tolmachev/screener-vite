@@ -57,17 +57,6 @@ useEffect(() => {
     setCurrentPage(1)
 }, [allRows.length]);
 
-// if (isLoading) return (
-// <>
-//     <SettingSection 
-//         toggleCheckBox={toggleCheckBox} 
-//         columnsOfTable={columns}
-//         radioBtn={radioBtn}
-//         setRadioBtn={setRadioBtn}
-//         hideAllColumns={hideAllColumns}
-//     />
-//     <OrdersBookPageSkeleton/>
-// </>);
 
     return (
         <div className='h-full'>
