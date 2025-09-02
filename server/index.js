@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-
 import klines from './routes/klines.js';
 import futures from './routes/futures.js';
 import fetchNewOrderBook from './routes/fetchNewOrderBook.js';
@@ -11,8 +10,8 @@ import OrdersBook from './ws/ordersBook.js';
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// http://localhost:5173
-//'https://screener-vite.vercel.app'
+// http://localhost:5173;
+//'https://screener-vite.vercel.app';
 
 app.use(cors({ origin: ['https://screener-vite.vercel.app'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
 // app.options('*', cors());
@@ -22,7 +21,6 @@ app.use('/api', klines);
 app.use('/api', fetchNewOrderBook);
 app.use('/api', fetchNewHeatMap)
 app.use('/api', fetchTickersForOrderBook)
-
 
 OrdersBook(app);
 app.listen(PORT, () => console.log(`🟢 Сервер стартовал на http://localhost:${PORT}`));
