@@ -57,21 +57,20 @@ useEffect(() => {
     setCurrentPage(1)
 }, [allRows.length]);
 
-if (isLoading) return (
-<>
-    <SettingSection 
-        toggleCheckBox={toggleCheckBox} 
-        columnsOfTable={columns}
-        radioBtn={radioBtn}
-        setRadioBtn={setRadioBtn}
-        hideAllColumns={hideAllColumns}
-    />
-    <OrdersBookPageSkeleton/>
-</>);
+// if (isLoading) return (
+// <>
+//     <SettingSection 
+//         toggleCheckBox={toggleCheckBox} 
+//         columnsOfTable={columns}
+//         radioBtn={radioBtn}
+//         setRadioBtn={setRadioBtn}
+//         hideAllColumns={hideAllColumns}
+//     />
+//     <OrdersBookPageSkeleton/>
+// </>);
 
     return (
         <div className='h-full'>
-            {isLoading && <>
             <SettingSection 
                 toggleCheckBox={toggleCheckBox} 
                 columnsOfTable={columns}
@@ -79,23 +78,25 @@ if (isLoading) return (
                 setRadioBtn={setRadioBtn}
                 hideAllColumns={hideAllColumns}
             />
-            <OrdersBookPageSkeleton/>
-            </>}
-            <div className='wr-table px-3 box-border'>
-            {allRows.length === 0 
-                ?<div className='flex justify-center mb-2 w-full'>
-                    <div className='p-3 bg-gray-700 w-fit'>
-                        <p className='text-[18px] text-gray-100'>Записей с текущими настройками не найдено</p>
+            {isLoading 
+               ? <OrdersBookPageSkeleton/> 
+                : <div className='wr-table px-3 box-border'>
+                    {allRows.length === 0 
+                    ? <div className='flex justify-center mb-2 w-full'>
+                        <div className='p-3 bg-gray-700 w-fit'>
+                            <p className='text-[18px] text-gray-100'>Записей с текущими настройками не найдено</p>
+                        </div>
                     </div>
-                </div>
-                :<PaginationOderBookPage 
-                    setCurrentPage={setCurrentPage} 
-                    currentPage={currentPage}
-                    countOfPage={countOfPage}
-                />
+                        :<PaginationOderBookPage 
+                            setCurrentPage={setCurrentPage} 
+                            currentPage={currentPage}
+                            countOfPage={countOfPage}
+                        />
             }
-                <TableOrderBook columns={columns} paginatedRows={paginatedRows}/>
-            </div>
+                        <TableOrderBook columns={columns} paginatedRows={paginatedRows}/>
+                    </div>
+            }
+
         </div>
     )
 };
