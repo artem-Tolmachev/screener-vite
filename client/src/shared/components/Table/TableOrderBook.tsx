@@ -24,7 +24,7 @@ export function TableOrderBook({paginatedRows, columns}: Props) {
 
   return (
     <Table className="w-full bg-gray-950 rounded-[8px] h-full">
-     <TableCaption className="text-gray-400">Список крупных лимитных ордеров</TableCaption>
+     {/* <TableCaption className="text-gray-400">Список крупных лимитных ордеров</TableCaption> */}
      <TableHeader className="">
       <TableRow className="text-blue-900">
         {firstItemHeader && (

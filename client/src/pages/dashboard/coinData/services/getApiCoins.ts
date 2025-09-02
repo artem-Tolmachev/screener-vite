@@ -9,7 +9,7 @@ export const coinsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({
-            query: () => 'api/get-futures',
+            query: () => '/api/get-futures',
             transformResponse: (response: BackendResponse) => ({
                 tickers: tickerParser(response.tickers),
                 btcUsdt: defaultCoinParser(response.btcData)
@@ -18,7 +18,7 @@ export const coinsApi = createApi({
         // getOrdersbook: builder.mutation<Record<string, OrderBookData>, {n: number}>({
         getOrdersbook: builder.mutation<OrdersBookResponse, {minValue: number; range: number}>({
             query: (body) => ({
-                url: 'api/new-orders',
+                url: '/api/new-orders',
                 method: 'POST',
                 body
             }),
@@ -29,7 +29,7 @@ export const coinsApi = createApi({
         }),
         updateOrdersBookTickersData: builder.mutation<CurrentPrice[], string[]>({
             query: (body) => ({
-                url: 'api/update-ticker',
+                url: '/api/update-ticker',
                 method: 'POST',
                 body
             }),
@@ -39,14 +39,14 @@ export const coinsApi = createApi({
             }
         }),
         getHeatMap: builder.query<HeatMapData, void>({
-            query: () => 'api/heatmap'
+            query: () => '/api/heatmap'
         }),
         getKlines: builder.query<{
             dataKlines: ReturnType<typeof dataKlinesParser>,
             dataValume: ReturnType<typeof dataValumeParser>
         }, { interval: string | undefined, symbol: string, limit: string, category: string }>({
             query: ({ interval, symbol, limit, category }) => ({
-                url: `api/get-klines`,
+                url: `/api/get-klines`,
                 method: 'GET',
                 params: { interval, symbol, limit, category }
             }),
@@ -61,4 +61,4 @@ export const coinsApi = createApi({
     })
 })
 
-export const { useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi
+export const { useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;

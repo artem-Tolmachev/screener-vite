@@ -14,13 +14,12 @@ interface Props {
 }
 
 export function PaginationOderBookPage({setCurrentPage, currentPage, countOfPage}: Props) {
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
 
   return (
-    <Pagination className="py-3.5">
+    <Pagination className="py-3.5 h-[70px]">
         <PaginationContent className="text-gray-400">
             <PaginationItem>
                 <PaginationPrevious
