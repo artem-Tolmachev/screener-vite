@@ -12,7 +12,7 @@ const app = express();
 
 // http://localhost:5173;
 //'https://screener-vite.vercel.app';
-
+// app.use(cors({ origin: ['https://screener-vite.vercel.app'], methods: ['GET', 'POST', 'PUT', 'DELETE'], 
 app.use(cors({ origin: ['https://screener-vite.vercel.app'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
 // app.options('*', cors());
 app.use(express.json());
