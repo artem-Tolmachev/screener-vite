@@ -12,7 +12,7 @@ function Layout() {
 
     return (
         <>
-            <header className="flex items-center justify-center bg-blue-950 h-[10%]">
+            <header className="flex items-center justify-center bg-blue-950 h-[10%] min-h-[66px]">
                 <div className="flex justify-between items-center w-[100%] h-full">
                     {Object.entries(navArray).map(([text, path]) => (
                     <div className='w-[50%] h-full text-center' key={path + 1} >
@@ -27,7 +27,7 @@ function Layout() {
                 ))}
                 </div>
             </header>
-            <main className='flex h-[90%] flex-col pb-5 bg-blue-950'>
+            <main className='flex h-[90%] min-h-[598px] flex-col pb-5 bg-blue-950'>
                 <Outlet/>
             </main>
             {!hideFooter && <footer className=' flex items-center justify-center h-[10%] bg-black' >
