@@ -93,6 +93,9 @@
   body {
     @apply text-foreground;
   }
+  #root {
+    height: 100%;
+  }
   .header-link {
     @apply text-lg flex items-center h-full w-full;
     padding: 0px 16px;

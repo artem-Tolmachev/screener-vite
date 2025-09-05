@@ -3,7 +3,7 @@ import DashboardPageHeader from '@/pages/dashboard/components/widgets/DashboardP
 
 function Dashboard(){
     return(
-        <div className="flex flex-col h-full min-h-full bg-blue-950">
+        <div className="flex flex-col min-h-0 flex-1 bg-blue-950">
             <DashboardPageHeader/>
             <DashboardPage/>
         </div>

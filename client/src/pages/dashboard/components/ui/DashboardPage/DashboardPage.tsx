@@ -35,7 +35,7 @@ function DashboardPage(){
     <>
       {
         rows ? (
-          <ResizablePanelGroup direction={direction} className="pl-1 pb-2">
+          <ResizablePanelGroup direction={direction} className="pl-1 pb-1 min-h-0 flex-1">
             <ResizablePanel>
               <ResizablePanelGroup direction={direction} className="pt-0">
                 {Array.from({ length: screens }).map((_, outerIndex) => {
@@ -99,7 +99,7 @@ function DashboardPage(){
             </ResizablePanel>
           </ResizablePanelGroup>
           ) : col && side === "left" ? (
-            <ResizablePanelGroup direction="horizontal" className="pl-1 pb-2">
+            <ResizablePanelGroup direction="horizontal" className="pl-1 pb-1">
               <ResizablePanel>
                 <ResizablePanelGroup direction="vertical" className="pt-0">
                   {Array.from({ length: screens - 1 }).map((_, outerIndex) => {
@@ -193,7 +193,7 @@ function DashboardPage(){
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : col && side === "right" ? (
-            <ResizablePanelGroup direction="horizontal" className="pl-1 pb-2">
+            <ResizablePanelGroup direction="horizontal" className="pl-1 pb-1">
               <ResizablePanel onMouseEnter={() => toggle((screens - 1), screenId)}>
                 <ResizablePanelGroup direction="horizontal" className="pt-0 cursor-pointer" onClick={() => dispatch(setActivePanelIndex(screens - 1))}>
                   <ResizablePanel >
@@ -278,7 +278,7 @@ function DashboardPage(){
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : col && side === "top" ? (
-            <ResizablePanelGroup direction="vertical" className="pl-1 pb-2">
+            <ResizablePanelGroup direction="vertical" className="pl-1 pb-1">
               <ResizablePanel>
                 <ResizablePanelGroup direction="horizontal" className="pt-0">
                   {Array.from({ length: col }).map((_, outerIndex) => {
@@ -371,7 +371,7 @@ function DashboardPage(){
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : col && side === "bottom" ? (
-            <ResizablePanelGroup direction="vertical" className="pl-1 pb-2">
+            <ResizablePanelGroup direction="vertical" className="pl-1 pb-1">
               <ResizablePanel onMouseEnter={() => toggle((screens - 1), screenId)}>
                 <ResizablePanelGroup 
                   direction="horizontal" 
@@ -460,7 +460,7 @@ function DashboardPage(){
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
-          <ResizablePanelGroup direction="vertical" className="pl-1 pb-2">
+          <ResizablePanelGroup direction="vertical" className="pl-1 pb-1">
             <ResizablePanel>
               <ResizablePanelGroup direction="horizontal" className="pt-0">
                 {Array.from({ length: greed }).map((_, outerIndex) => {

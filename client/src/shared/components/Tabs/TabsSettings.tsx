@@ -41,9 +41,9 @@ export function TabsSettings({hideAllColumns, columnsOfTable, toggleCheckBox, ra
   }
 
   return (
-    <div className="max-w-full flex w-full h-full flex-col gap-6 rounded-[100px]">
+    <div className="max-w-full flex w-full h-full flex-col gap-6 rounded-[100px] pb-9">
       <Tabs defaultValue="account">
-        <TabsList className="w-full max-w-full h-[100px] border-b-2 border-b-gray-600 pb-[-5px]">
+        <TabsList className="w-full max-w-full h-[50px] border-b-2 border-b-gray-600 pb-[-5px]">
           <TabsTrigger value="account" className="text-gray-400 text-xl mb-[-4px]">Скринер</TabsTrigger>
           <TabsTrigger value="password" className="text-gray-400 text-xl mb-[-4px]">Настройки</TabsTrigger>
         </TabsList>
