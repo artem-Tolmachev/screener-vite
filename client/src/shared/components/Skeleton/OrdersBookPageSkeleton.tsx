@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton"
 export default function OrdersBookPageSkeleton() {
   return (
-    <div className="flex pr-10 pt-[75px] pl-[12px] space-x-4 h-[85%] w-[100%] bg-blue-950">
-        <div className="flex flex-col space-y-5 bg-gray-900 p-6 rounded-[5px] h-[400px] w-full">
+    <div className="flex pr-10 py-14 pl-[12px] space-x-4 h-[85%] w-[100%] bg-blue-950">
+        <div className="flex flex-col space-y-5 bg-gray-900 p-6 rounded-[5px] h-full w-full">
             <div className="flex justify-between
 ">
                 <Skeleton className="h-4 w-[150px] rounded-2xl bg-gray-500" />
