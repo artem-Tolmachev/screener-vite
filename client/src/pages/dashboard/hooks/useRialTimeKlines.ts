@@ -27,7 +27,6 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   const screenId = useAppSelector(state => state.coins.mainScreen);
   const allScreens = useAppSelector(state => state.coins.allscreens);    
   const ativeArray = allScreens.find(el => el.id === screenId);
-  // const panelIndex = useAppSelector(state => state.coins.panelIndex);   
   if(!ativeArray) return;
   const chartSettingsArrayScreens = ativeArray?.screens;
   if(!chartSettingsArrayScreens) return;
@@ -36,28 +35,26 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   const {interval, symbol } = chartSettings;
 
   useEffect(() => {
-
     const socket = new WebSocket('wss://stream.bybit.com/v5/public/linear');
-    
     const topic = [
         `kline.${interval}.${symbol}`,
         `orderbook.${'1'}.${'BTCUSDT'}`,
     ];
 
-        socket.onopen = () => {
-        console.log('🔗 WebSocket подключен');
-        socket.send(JSON.stringify({
-            op: 'subscribe',
-            args: topic
-        }));
+    socket.onopen = () => {
+    console.log('🔗 WebSocket подключен');
+    socket.send(JSON.stringify({
+        op: 'subscribe',
+        args: topic
+    }));
 
-      pingInterval = setInterval(() => {
-        socket.send(JSON.stringify({
-          req_id: Date.now().toString(),
-          op: 'ping'
-        }));
-      }, 20000);
-    };
+    pingInterval = setInterval(() => {
+      socket.send(JSON.stringify({
+        req_id: Date.now().toString(),
+        op: 'ping'
+      }));
+    }, 20000);
+  };
 
   socket.onmessage = (evt) => {
   const msg = JSON.parse(evt.data);
@@ -85,11 +82,11 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   }
 };
 
+return () => {
+    if (pingInterval) clearInterval(pingInterval);
+    socket.close();
+}
 
-    return () => {
-        if (pingInterval) clearInterval(pingInterval);
-        socket.close();
-    }
-  }, [candlestickSeriesRef, interval, symbol, panelIndex]);
+}, [candlestickSeriesRef, interval, symbol, panelIndex]);
 
 };

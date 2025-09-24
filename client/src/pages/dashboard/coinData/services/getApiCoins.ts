@@ -45,10 +45,10 @@ export const coinsApi = createApi({
             dataKlines: ReturnType<typeof dataKlinesParser>,
             dataValume: ReturnType<typeof dataValumeParser>
         }, { interval: string | undefined, symbol: string, limit: string, category: string }>({
-            query: ({ interval, symbol, limit, category }) => ({
+            query: ({ interval, symbol, limit, category}) => ({
                 url: `/api/get-klines`,
                 method: 'GET',
-                params: { interval, symbol, limit, category }
+                params: { interval, symbol, limit, category}
             }),
             transformResponse: (response?: { result?: { list?: any[] } }) => {
                 const list = response?.result?.list || [];
@@ -61,4 +61,4 @@ export const coinsApi = createApi({
     })
 })
 
-export const { useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;
+export const {useLazyGetKlinesQuery, useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;

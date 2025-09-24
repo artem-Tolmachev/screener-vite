@@ -28,13 +28,13 @@ function TradingInfoPanel({panelIndex}: Props) {
                     <div
                         className={styles.ask1Price}
                         data-tooltip-id="tooltip"
-                        data-tooltip-content="Цена продажи (Ask)"
+                        data-tooltip-content="Цена продажи ( Ask )"
                     >
                         {ask1Price ?? '—'}
                     </div>
                     <div className={styles.bid1Price}
                         data-tooltip-id="tooltip"
-                        data-tooltip-content="Цена продажи (Ask)"
+                        data-tooltip-content="Цена покупки ( Bid )"
                     >
                         {bid1Price ?? '—'}
                     </div>
@@ -43,6 +43,7 @@ function TradingInfoPanel({panelIndex}: Props) {
             <Tooltip 
             id="tooltip" 
             variant="light"
+            style={{ fontSize: '18px' }}
             place='bottom-end' />
         </div>
     );

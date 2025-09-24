@@ -13,7 +13,8 @@ export const screenData: AllDataCoin = {
     CoinData: {
     ...DEFAULT_COIN_OPTION,
     src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg',
-    symbol: 'BTCUSDT'
+    symbol: 'BTCUSDT',
+    lines: []
     },
     isLogo: true,
     storeList: {
@@ -58,6 +59,3 @@ export const screen: ScreenGroup = {
         layout: {rows: 1, col: 0, side: ''}
     }
 };
-
-
-

@@ -47,6 +47,16 @@ export type MarketData =
   | "src"
   | "marker"
   >;
+
+export interface LineData {
+  price: number;
+  timestamp: UTCTimestamp;
+}  
+
+export interface MarketDataWithLines extends MarketData {
+  lines?: LineData[];
+}
+
 export type TickerProps = {
   key: string;
   name: string;
@@ -61,6 +71,7 @@ export type InitiaLChartSettings = {
     limit: string;
     category: string;
 }
+
 export type Kline = {
     time: UTCTimestamp;
     open: number;
@@ -68,11 +79,13 @@ export type Kline = {
     low: number;
     close: number;
   };
+
 export type Cand = {
     time: UTCTimestamp;
     value: number;
     color: string;
 }
+
 export type UseKlinesResult = {
     data: Kline[];
     volume: Cand[];
@@ -91,9 +104,9 @@ export type KlineTupleValume = [
 ];
 
 export interface IDashboardHeaderItems {
-    key: string;
-    name: string;
-    visible: number;
+  key: string;
+  name: string;
+  visible: number;
 }
 
 export type Candlestick = ISeriesApi<"Candlestick", Time, CandlestickData<Time> | WhitespaceData<Time>, CandlestickSeriesOptions>  | null;
@@ -105,9 +118,10 @@ export type BackendResponse = {
 }
 
 export interface OriginalResponse {
-    tickers: ReturnType<typeof tickerParser>;
-    btcUsdt: DefaultCoin;
+  tickers: ReturnType<typeof tickerParser>;
+  btcUsdt: DefaultCoin;
 }
+
 type HeatMapEntry = {
   price: number;
   volume: number;
@@ -121,14 +135,20 @@ export type HeatMapData = {
 };
 
 export interface FullTickerProps extends TickerProps{
-    col: IDashboardHeaderItems[];
-    src: string;
-    item: MarketData;
-    panelIndex: number;
+  col: IDashboardHeaderItems[];
+  src: string;
+  item: MarketData;
+  panelIndex: number;
 }
 
+// interface itemList{
+//   item: MarketData[];
+//   color: string;
+//   colorName: string;
+// }
+
 interface itemList{
-  item: MarketData[];
+  item: MarketDataWithLines[];
   color: string;
   colorName: string;
 } 
@@ -137,7 +157,7 @@ export type NamedMarketDataLists = {
   [listName: string]: itemList;
 };
 
-export interface Layout{
+export interface Layout {
    rows: number;
    col: number;
    side: 'right' | 'left' | 'top' | 'bottom' | '';
@@ -155,6 +175,7 @@ export interface AllDataCoin {
     CoinData: DefaultCoin & {
     src: string;
     symbol: string;
+    lines: LineData[];
     };
     isLogo: boolean;
     storeList: NamedMarketDataLists;

@@ -25,10 +25,9 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
     const list = panel?.storeList?.[activeList];
 
     if (!list) return null;
-    const data = list.item;
- 
-    const screenId = useAppSelector(store => store.coins.mainScreen);
+    const dataItem = list.item;
 
+    const screenId = useAppSelector(store => store.coins.mainScreen);
     const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
     const activedSymbol = usePersistedInterval();
     const isHovered = useShowHide(false);
@@ -49,13 +48,13 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
         setActiveSymbol(symbol === activeSymbol ? activeSymbol : symbol);
     }
     const dispatch = useDispatch();
-
     const deliteCoin = (item: MarketData) => {
         dispatch(delCoin({item, screenId, panelIndex}));
         const symbol = item.symbol;
         dispatch(removeMarker({symbol, screenId, panelIndex}));
     }
 
+    let _t = Date.now();
     function hendleChart(name: string, src: string, ask1Price: string, bid1Price: string) {
         dispatch(addChart({
             symbol: name,
@@ -63,7 +62,8 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
             ask1Price: ask1Price,
             bid1Price: bid1Price,
             screenId: screenId,
-            panelIndex: panelIndex
+            panelIndex: panelIndex,
+            _t: _t
         }))
         getActiveClass(name)
     }
@@ -71,7 +71,7 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
     return (
         <div className={`${styles.DashboardTickerOut} parents-block`}>
             {
-                data.map((ticker) => (
+                dataItem.map((ticker) => (
                     <div
                         onMouseEnter={() => {isHovered.show(), isHovered.symbol(ticker.symbol)}}
                         onMouseLeave={() => {isHovered.hide(), isHovered.symbol(ticker.symbol)}}

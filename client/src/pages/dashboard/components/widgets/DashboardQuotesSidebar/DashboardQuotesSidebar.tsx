@@ -26,10 +26,8 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex, selectedCoin, isA
         { key: 'price', name: 'Цена', visible: 1 },
         { key: 'turnover', name: 'Оборот', visible: 1 }
     ])
-
     const { data, isLoading } = useGetCoinsQuery();
     const dispatch = useAppDispatch();
-
     useEffect(() => {
         if (data?.btcUsdt) {
             dispatch(defaultLoading(data.btcUsdt));

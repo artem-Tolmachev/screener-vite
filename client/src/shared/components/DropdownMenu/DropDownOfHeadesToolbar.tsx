@@ -23,7 +23,6 @@ export function DropDownOfHeadesToolbar() {
         dispatch(setMainScreen(screenid))
         dispatch(setActivePanelIndex(0))
     } 
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

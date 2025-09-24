@@ -12,6 +12,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/types", "tailwind.config.js"]
+  "include": ["src", "src/types", "tailwind.config.js" , "src/lib/dist/typings.d.ts", "src/lib/types/line-tools-js.d.ts" ]
 }
 
