@@ -5,8 +5,8 @@ import { CurrentPrice, OrdersBookResponse } from '@/pages/ordersBookPage/types';
 
 export const coinsApi = createApi({
     reducerPath: 'coinsApi',
-    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
+    // baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({
             query: () => '/api/get-futures',
