@@ -12,13 +12,14 @@ router.get('/get-klines', async (req, res) => {
     }
   }
   try {
+    const {_t, ...paramsRtk} = req.query;
     const response = await axios.get(BASE_URL, {
       params: {
-        category: req.query.category,
-        symbol: req.query.symbol,
-        interval: req.query.interval,
-        start: req.query.start,
-        limit: req.query.limit,
+        category: paramsRtk.category,
+        symbol: paramsRtk.symbol,
+        interval: paramsRtk.interval,
+        start: paramsRtk.start,
+        limit: paramsRtk.limit,
       },
     });
     res.json(response.data);
