@@ -52,7 +52,7 @@ function Chart({panelIndex}: Props) {
     const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
     const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
     const defaultPanelChartData = activeArray.CoinData.id;
-    
+
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
         const Chart = window.LightweightCharts.createChart(chartContainerRef.current);
@@ -171,8 +171,8 @@ function Chart({panelIndex}: Props) {
     }, [lineToolsRef.current, horzLineOfactiveItems, isLine]);
 
     function renderLines(){
-        chartInstance.current.removeAllLineTools?.();
         if(chartInstance.current){
+            chartInstance.current.removeAllLineTools?.();
                 if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
                     horzLineOfDefaultCoin.forEach(el => {
                     let lineTool = chartInstance.current.addLineTool("HorizontalRay", [el], {
