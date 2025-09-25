@@ -52,8 +52,9 @@ function Chart({panelIndex}: Props) {
     const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
     const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
     const defaultPanelChartData = activeArray.CoinData.id;
+    
     useEffect(() => {
-    if (!chartContainerRef.current) return;
+    if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
         const Chart = window.LightweightCharts.createChart(chartContainerRef.current);
         const newOptions = {
             layout: {
