@@ -7,9 +7,8 @@ import { useDispatch } from 'react-redux';
 import DeliteButton from '../../ui/DeliteButton/DeliteButton';
 import { usePersistedInterval } from '@/pages/dashboard/hooks/usePersistedInterval';
 import { AllDataCoin, IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
-import { addChart, defaultLoading, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { addChart, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import useShowHide from '@/pages/dashboard/hooks/useShowHide';
-import { screenData } from '@/pages/dashboard/coinData/constants/screenData';
 import { DefaultCoin } from '@/pages/dashboard/coinData/constants/defaultSettings';
 
 interface Props {
@@ -23,7 +22,6 @@ interface Props {
 const DashboardTickerOut = ({screensDataArray, panelIndex, columns, btsUsdt}: Props) => {
     const panel = screensDataArray?.[panelIndex];
     const activeList = panel?.activeList;
-    // const defaultItem = screenData.CoinData
     const dispatch = useDispatch();
     if(!activeList) return
     const list = panel?.storeList?.[activeList];

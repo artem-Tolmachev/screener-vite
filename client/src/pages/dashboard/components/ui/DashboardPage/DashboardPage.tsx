@@ -28,8 +28,9 @@ function DashboardPage(){
   if (!controler || !controler.layout) {
     return <div>Loading...</div>; // Или другой индикатор загрузки
   }
+  
   if(!controler) return;
-  const {screensDataArray, selectedCoin, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
+  const {screensDataArray, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
 
   const { rows, col, side } = layout || {};
 
