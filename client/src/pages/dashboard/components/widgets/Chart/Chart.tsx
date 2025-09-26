@@ -196,14 +196,12 @@ function Chart({panelIndex}: Props) {
                     });
                     lineToolsRef.current.push({
                         tool: lineTool
-                    });
-                    setIsLine(true)
-                    setCheckedLine(lineTool.Rg.Ls[0].price)      
+                    });    
                 });
             }
         }
     }
-    
+
     useEffect(() => {
         renderLines();
     }, [horzLineOfactiveItems]);
