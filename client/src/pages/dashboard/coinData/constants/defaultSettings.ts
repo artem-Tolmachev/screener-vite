@@ -3,6 +3,7 @@ export interface DefaultCoin{
   bid1Price: string,
   id?: string
 }
+
 export interface chartSettings {
   interval: string;
   symbol: string;

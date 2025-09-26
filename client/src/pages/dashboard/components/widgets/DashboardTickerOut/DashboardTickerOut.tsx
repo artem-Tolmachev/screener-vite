@@ -7,26 +7,29 @@ import { useDispatch } from 'react-redux';
 import DeliteButton from '../../ui/DeliteButton/DeliteButton';
 import { usePersistedInterval } from '@/pages/dashboard/hooks/usePersistedInterval';
 import { AllDataCoin, IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
-import { addChart, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { addChart, defaultLoading, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import useShowHide from '@/pages/dashboard/hooks/useShowHide';
+import { screenData } from '@/pages/dashboard/coinData/constants/screenData';
+import { DefaultCoin } from '@/pages/dashboard/coinData/constants/defaultSettings';
 
 interface Props {
     columns: IDashboardHeaderItems[];
-    selectedCoin: MarketData[];
     isActive: boolean;
     panelIndex: number;
     screensDataArray: AllDataCoin[] | undefined;
+    btsUsdt: DefaultCoin ;
 }
 
-const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
+const DashboardTickerOut = ({screensDataArray, panelIndex, columns, btsUsdt}: Props) => {
     const panel = screensDataArray?.[panelIndex];
     const activeList = panel?.activeList;
+    // const defaultItem = screenData.CoinData
+    const dispatch = useDispatch();
     if(!activeList) return
     const list = panel?.storeList?.[activeList];
-
+   
     if (!list) return null;
     const dataItem = list.item;
-
     const screenId = useAppSelector(store => store.coins.mainScreen);
     const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
     const activedSymbol = usePersistedInterval();
@@ -47,9 +50,9 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns}: Props) => {
     function getActiveClass(symbol: string) {
         setActiveSymbol(symbol === activeSymbol ? activeSymbol : symbol);
     }
-    const dispatch = useDispatch();
+
     const deliteCoin = (item: MarketData) => {
-        dispatch(delCoin({item, screenId, panelIndex}));
+        dispatch(delCoin({item, screenId, panelIndex, btsUsdt}));
         const symbol = item.symbol;
         dispatch(removeMarker({symbol, screenId, panelIndex}));
     }

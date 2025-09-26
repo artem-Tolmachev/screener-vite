@@ -41,18 +41,21 @@ function Chart({panelIndex}: Props) {
     if(!activeArray) return;
     const chartSettings = activeArray?.chartSettings;
     if(!chartSettings) return;
+    
     useRialTimeKlines({candlestickSeriesRef, panelIndex});
-    const { data: klinesData } = useGetKlinesQuery(chartSettings ?? DEFAULT_CHART_SETTINGS, {
+    const { data: klinesData } = useGetKlinesQuery( 
+        chartSettings ?? DEFAULT_CHART_SETTINGS, {
         skip: !chartSettings, 
         refetchOnMountOrArgChange: true,
     });
+
     const dataKlines: Kline[] = [...klinesData?.dataKlines ?? []];
     const dataValume: Cand[] = [...klinesData?.dataValume ?? []];
     const { data, volume } = useTimeSortedKlines({ dataKlines, dataValume });
     const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
     const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
     const defaultPanelChartData = activeArray.CoinData.id;
-
+    
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
         const Chart = window.LightweightCharts.createChart(chartContainerRef.current);
@@ -102,7 +105,7 @@ function Chart({panelIndex}: Props) {
 
     useEffect(() => {
         if (!chartInstance.current) return;
-        function newHOrzLine(param: MouseEventParams) {
+        function newHOrzLine(param: MouseEventParams){
             if (!param.point) return;
                 const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
                 const clickedTime = param.time;
@@ -132,15 +135,13 @@ function Chart({panelIndex}: Props) {
             lines: any[]
         ) => {
         if (!lines || lines.length === 0) return null;
-
         const validLines = lines.filter(line => clickedTime >= line.tool.Rg.Ls[0].timestamp);
             if (validLines.length === 0) return null;
-
-        return validLines.reduce((closest: any, current: any) => {
-            const currentDiff = Math.abs(clickedPrice - current.tool.Rg.Ls[0].price);
-            const closestDiff = Math.abs(clickedPrice - closest.tool.Rg.Ls[0].price);
-            return currentDiff < closestDiff ? current : closest;
-        });
+            return validLines.reduce((closest: any, current: any) => {
+                const currentDiff = Math.abs(clickedPrice - current.tool.Rg.Ls[0].price);
+                const closestDiff = Math.abs(clickedPrice - closest.tool.Rg.Ls[0].price);
+                return currentDiff < closestDiff ? current : closest;
+            });
     };
 
     const isClickNearLine = (clickedY: number, linePrice: number, thresholdPx = 5) => {
@@ -151,6 +152,7 @@ function Chart({panelIndex}: Props) {
 
     const handleChartClick = (param: MouseEventParams) => {
         if (!param.point || !param.time) return;
+
         const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
         const clickedY = param.point.y;
         const clickedTime = param.time as number;
@@ -161,11 +163,12 @@ function Chart({panelIndex}: Props) {
         if (isClickNearLine(clickedY, linePrice)) {
                 setIsLine(true)
                 setCheckedLine(linePrice)
-        }else{
-            setIsLine(false)
-        }
+            }else{
+                setIsLine(false)
+            }
         }
     };
+
     chartInstance.current.subscribeClick(handleChartClick);
     return () => chartInstance.current.unsubscribeClick(handleChartClick);
     }, [lineToolsRef.current, horzLineOfactiveItems, isLine]);
@@ -176,13 +179,13 @@ function Chart({panelIndex}: Props) {
                 if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
                     horzLineOfDefaultCoin.forEach(el => {
                     let lineTool = chartInstance.current.addLineTool("HorizontalRay", [el], {
-                            line: { color: "rgba(245,166,35,1)", width: 1 },
-                            visible: true,
-                            editable: true,
-                        });
-                        lineToolsRef.current.push({
-                            tool: lineTool
-                        });      
+                        line: { color: "rgba(245,166,35,1)", width: 1 },
+                        visible: true,
+                        editable: true,
+                    });
+                    lineToolsRef.current.push({
+                        tool: lineTool
+                    });   
                 });
             }else{
                 horzLineOfactiveItems.forEach(el => {
@@ -193,12 +196,14 @@ function Chart({panelIndex}: Props) {
                     });
                     lineToolsRef.current.push({
                         tool: lineTool
-                    });      
+                    });
+                    setIsLine(true)
+                    setCheckedLine(lineTool.Rg.Ls[0].price)      
                 });
             }
         }
     }
-
+    
     useEffect(() => {
         renderLines();
     }, [horzLineOfactiveItems]);
@@ -237,7 +242,6 @@ function Chart({panelIndex}: Props) {
                 }
             }
         };
-
         window.addEventListener("keydown", handleKeyDown);
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
@@ -255,11 +259,10 @@ function Chart({panelIndex}: Props) {
                         panelIndex= {panelIndex} 
                         checkedLine={checkedLine}
                         setIsLine={setIsLine}
-                        />
+                    />
                 }
                 <TradingInfoPanel panelIndex={panelIndex}/>
-                <div ref={chartContainerRef} className="chart-wr w-[100%] h-full"> 
-                </div>
+                <div ref={chartContainerRef} className="chart-wr w-[100%] h-full"></div>
             </div>
         </div>
 

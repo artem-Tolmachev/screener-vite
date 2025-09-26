@@ -80,7 +80,7 @@ function DashboardPage(){
                             >
                               <Suspense fallback={<DashboardSkeleton/>}>
                                 <DashboardQuotesSidebarLazy 
-                                 selectedCoin={selectedCoin}
+                                //  selectedCoin={selectedCoin}
                                   isActive={isActiveList[panelIndex]}
                                   panelIndex={panelIndex}
                                   screensDataArray={screensDataArray}
@@ -140,7 +140,7 @@ function DashboardPage(){
                             >
                               <Suspense fallback={<DashboardSkeleton />}>
                                 <DashboardQuotesSidebarLazy 
-                                  selectedCoin={selectedCoin}
+                                  // selectedCoin={selectedCoin}
                                   isActive={isActiveList[panelIndex]}
                                   panelIndex={panelIndex}
                                   screensDataArray={screensDataArray}
@@ -180,7 +180,7 @@ function DashboardPage(){
                     <Suspense fallback={<DashboardSkeleton />}>
                       <DashboardQuotesSidebarLazy
                       isActive={isActiveList[screens - 1]} 
-                      selectedCoin={selectedCoin}
+                      // selectedCoin={selectedCoin}
                       screensDataArray={screensDataArray}
                       panelIndex={screens - 1}
                       />
@@ -208,7 +208,7 @@ function DashboardPage(){
                     <ResizablePanel>
                       <Suspense fallback={<DashboardSkeleton />}>
                         <DashboardQuotesSidebarLazy
-                          selectedCoin={selectedCoin}
+                          // selectedCoin={selectedCoin}
                           isActive={isActiveList[screens - 1]}
                           panelIndex={screens - 1}
                           screensDataArray={screensDataArray}
@@ -258,7 +258,7 @@ function DashboardPage(){
                             >
                               <Suspense fallback={<DashboardSkeleton />}>
                                 <DashboardQuotesSidebarLazy 
-                                  selectedCoin={selectedCoin}
+                                  // selectedCoin={selectedCoin}
                                   isActive={isActiveList[panelIndex]}
                                   panelIndex={panelIndex}
                                   screensDataArray={screensDataArray}
@@ -315,7 +315,7 @@ function DashboardPage(){
                         >
                           <Suspense fallback={<DashboardSkeleton />}>
                             <DashboardQuotesSidebarLazy 
-                              selectedCoin={selectedCoin}
+                              // selectedCoin={selectedCoin}
                               isActive={isActiveList[panelIndex]}
                               panelIndex={panelIndex}
                               screensDataArray={screensDataArray}
@@ -355,7 +355,7 @@ function DashboardPage(){
                   <ResizablePanel>
                     <Suspense fallback={<DashboardSkeleton />}>
                       <DashboardQuotesSidebarLazy 
-                        selectedCoin={selectedCoin}
+                        // selectedCoin={selectedCoin}
                         isActive={isActiveList[screens - 1]}
                         panelIndex={screens - 1}
                         screensDataArray={screensDataArray}
@@ -390,7 +390,7 @@ function DashboardPage(){
                   <ResizablePanel>
                     <Suspense fallback={<DashboardSkeleton />}>
                       <DashboardQuotesSidebarLazy 
-                        selectedCoin={selectedCoin}
+                        // selectedCoin={selectedCoin}
                         isActive={isActiveList[screens - 1]}
                         panelIndex={screens - 1}
                         screensDataArray={screensDataArray}
@@ -438,7 +438,7 @@ function DashboardPage(){
                         >
                           <Suspense fallback={<DashboardSkeleton />}>
                             <DashboardQuotesSidebarLazy 
-                              selectedCoin={selectedCoin}
+                              // selectedCoin={selectedCoin}
                               isActive={isActiveList[panelIndex]}
                               panelIndex={panelIndex}
                               screensDataArray={screensDataArray}
@@ -496,7 +496,7 @@ function DashboardPage(){
                         >
                           <Suspense fallback={<DashboardSkeleton />}>
                             <DashboardQuotesSidebarLazy 
-                              selectedCoin={selectedCoin}
+                              // selectedCoin={selectedCoin}
                               isActive={isActiveList[panelIndex]}
                               panelIndex={panelIndex}
                               screensDataArray={screensDataArray}
@@ -552,7 +552,7 @@ function DashboardPage(){
                         >
                           <Suspense fallback={<DashboardSkeleton/>}>
                             <DashboardQuotesSidebarLazy 
-                              selectedCoin={selectedCoin}
+                              // selectedCoin={selectedCoin}
                               isActive={isActiveList[panelIndex]}
                               panelIndex={panelIndex}
                               screensDataArray={screensDataArray}

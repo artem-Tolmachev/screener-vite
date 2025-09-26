@@ -13,7 +13,7 @@ interface Props {
 
 const CoinSearchPopup = ({ tickers, panelIndex}: Props) => {
     const [value, setValue] = useState('');
-    const data = useDebounce(value, 1000)
+    const data = useDebounce(value, 1000);
     const filtred = useFilter(data, tickers);
     return (
         <>

@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-
 const rootReducer = combineReducers({
   [coinsApi.reducerPath]: coinsApi.reducer,
   coins: coins.reducer,
@@ -20,6 +19,7 @@ const persistConfig = {
   storage,
   whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook'], 
 };
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
@@ -36,5 +36,5 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector; 
 
 setupListeners(store.dispatch)
-
+// console.log(store.dispatch)
 // console.log(store.dispatch(coinsApi.endpoints.getCoins.initiate()))

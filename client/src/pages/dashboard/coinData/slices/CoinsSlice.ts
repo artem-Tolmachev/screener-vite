@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {MarketData, LineData} from "@/pages/dashboard/types";
-import {
-  DefaultCoin
- } from "../constants/defaultSettings";
+import { DefaultCoin } from "../constants/defaultSettings";
 import { screen, screenData, ScreenGroup } from "../constants/screenData";
 import { IconKey } from "@/shared/components/Icons/getIconsOfDiologToolBars";
 
@@ -68,19 +66,18 @@ export const coins = createSlice({
   //   isActive: i === safePanelIndex
   // }));
 
-  const newItem = {
-    id: screenid,
-      screens: newScreens,
-      screenOptions: {
-      greed: greed,
-      screens: count,
-      direction: direction,
-      layout: {rows: layoutRow, col: layoutCol, side: layoutSide},
-      height: height
-    }
-  };
-
-  state.allscreens.push(newItem);   
+    const newItem = {
+      id: screenid,
+        screens: newScreens,
+        screenOptions: {
+        greed: greed,
+        screens: count,
+        direction: direction,
+        layout: {rows: layoutRow, col: layoutCol, side: layoutSide},
+        height: height
+      }
+    };
+    state.allscreens.push(newItem);   
   },
   setMainScreen: (state, action: PayloadAction<number>) => {
     state.mainScreen = action.payload
@@ -116,12 +113,10 @@ export const coins = createSlice({
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
     const activeState = activeArray?.screens[panelIndex];
     const targetArray = activeState?.storeList[list].item;
-
     targetArray?.push({
           ...item,
           lines: []
     })
-
     // activeArray?.screens.forEach((key) => {
     //   const targetList = key.activeList ?? list;
     //   const marker = key.markers[item.symbol]|| '';
@@ -208,14 +203,32 @@ export const coins = createSlice({
       if(!activedState) return
       delete activedState.markers[symbol];
   },
-  delCoin: (state, action: PayloadAction<{item: MarketData, screenId: number, panelIndex: number}>) => {
-    const {item, screenId, panelIndex} = action.payload;
+  delCoin: (state, action: PayloadAction<{item: MarketData, screenId: number, panelIndex: number, btsUsdt?: DefaultCoin}>) => {
+    const {item, screenId, panelIndex, btsUsdt} = action.payload;
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
     const activedState = activeArray?.screens[panelIndex];
     if(!activedState) return
     const listName = activedState.activeList;
     const coin = item;
     activedState.storeList[listName].item = activedState.storeList[listName].item.filter(item => item.symbol !== coin.symbol);
+    if(!btsUsdt) return
+    if (activedState.CoinData.symbol === item.symbol) {
+      activedState.CoinData = {
+        ask1Price: btsUsdt.ask1Price,
+        bid1Price: btsUsdt.bid1Price,
+        src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg',
+        symbol: 'BTCUSDT',
+        id: '',
+        lines: [...activedState.CoinData.lines]
+      };
+      activedState.chartSettings = {
+        interval: '60',
+        symbol: 'BTCUSDT',
+        limit: '20000',
+        category: 'inverse',
+        _t: Date.now()
+    };
+  }
   },
   addChart: (state, action: PayloadAction<{ 
     symbol: string,
@@ -334,12 +347,10 @@ export const coins = createSlice({
       }
       coin.lines.push(hlPoint);
     }
-    if(!items.length){
-      if (!activedState.CoinData.lines) {
-        activedState.CoinData.lines = []; 
-      }
+
+    if(!activedState.CoinData.id){
         activedState.CoinData.lines.push(hlPoint);
-      }
+    }
   },
   addLineFlag: (state, action: PayloadAction<boolean>) => {
     state.flagLine = action.payload

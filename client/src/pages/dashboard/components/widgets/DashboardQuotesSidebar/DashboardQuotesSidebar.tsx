@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/app/store/store';
 import { useGetCoinsQuery } from '@/pages/dashboard/coinData/services/getApiCoins';
 import { useCollums } from '@/pages/dashboard/hooks/useCollums';
 import { defaultLoading } from '@/pages/dashboard/coinData/slices/CoinsSlice';
-import { AllDataCoin, IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
+import { AllDataCoin, IDashboardHeaderItems } from '@/pages/dashboard/types';
 import DashboardSkeleton from '@/shared/components/Skeleton/DashBoardSkeleton';
 
 interface IControlCheced {
@@ -14,12 +14,11 @@ interface IControlCheced {
     toggleCheckBox: (arg: string) => void;
 }
 interface Props {
-    isActive: boolean;
-   selectedCoin: MarketData[];   
+    isActive: boolean;  
    panelIndex: number;  
    screensDataArray: AllDataCoin[] | undefined;             
 }
-const DashboardQuotesSidebar = ({screensDataArray, panelIndex, selectedCoin, isActive}:Props) => {
+const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) => {
     const [isOpen, setIsOpen] = useState<boolean | string>(false);
     const { columns, toggleCheckBox }: IControlCheced = useCollums([
         { key: 'volume', name: 'Объем', visible: 1 },
@@ -56,13 +55,14 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex, selectedCoin, isA
                 />
                 <DashboardTickerOut
                     columns={columns}
-                    selectedCoin={selectedCoin}
                     isActive={isActive}
                     panelIndex={panelIndex}
                     screensDataArray={screensDataArray}
+                    btsUsdt={data?.btcUsdt}
                 />
             </div>
         </div>
     )
 }
+
 export default DashboardQuotesSidebar;
