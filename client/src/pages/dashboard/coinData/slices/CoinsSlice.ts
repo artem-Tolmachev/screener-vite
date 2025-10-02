@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {MarketData, LineData} from "@/pages/dashboard/types";
+import {MarketData, AnyLine, FlagIsLine, LineType, LineData, TrendLine, HrzLineData} from "@/pages/dashboard/types";
 import { DefaultCoin } from "../constants/defaultSettings";
 import { screen, screenData, ScreenGroup } from "../constants/screenData";
 import { IconKey } from "@/shared/components/Icons/getIconsOfDiologToolBars";
@@ -11,7 +11,7 @@ export interface CoinsState {
   activePanelBtn: IconKey;
   panelIndex: number;
   fullscreenChartId: number | null;
-  flagLine: boolean;
+  flagLine: FlagIsLine;
 }
 
 const initialState: CoinsState = {
@@ -21,7 +21,11 @@ const initialState: CoinsState = {
   activePanelBtn: 'btn-1',
   panelIndex: 0,
   fullscreenChartId: null,
-  flagLine: false
+  flagLine: {
+    isLineHrz: false,
+    isLineTrend: false,
+    isRay: false
+  }
 };
 
 export const coins = createSlice({
@@ -54,30 +58,22 @@ export const coins = createSlice({
     })
   });
 
-  // const safePanelIndex = Math.min(panelIndex, count - 1);
-
   const newScreens = Array.from({ length: count }).map((_, i) => ({
     ...screenData,
     isActive: i === panelIndex 
   }));
-
-  // const newScreens = Array.from({ length: count }).map((_, i) => ({
-  //   ...screenData,
-  //   isActive: i === safePanelIndex
-  // }));
-
-    const newItem = {
-      id: screenid,
-        screens: newScreens,
-        screenOptions: {
-        greed: greed,
-        screens: count,
-        direction: direction,
-        layout: {rows: layoutRow, col: layoutCol, side: layoutSide},
-        height: height
-      }
-    };
-    state.allscreens.push(newItem);   
+  const newItem = {
+    id: screenid,
+      screens: newScreens,
+      screenOptions: {
+      greed: greed,
+      screens: count,
+      direction: direction,
+      layout: {rows: layoutRow, col: layoutCol, side: layoutSide},
+      height: height
+    }
+  };
+  state.allscreens.push(newItem);   
   },
   setMainScreen: (state, action: PayloadAction<number>) => {
     state.mainScreen = action.payload
@@ -117,71 +113,6 @@ export const coins = createSlice({
           ...item,
           lines: []
     })
-    // activeArray?.screens.forEach((key) => {
-    //   const targetList = key.activeList ?? list;
-    //   const marker = key.markers[item.symbol]|| '';
-      
-    //   if (targetList) {
-    //   const alreadyAddedToTarget = key.storeList[targetList].item.some(
-    //     coin => coin.symbol === item.symbol
-    //   );
-
-    //   if (!alreadyAddedToTarget) {
-    //     key.storeList[targetList].item.push({
-    //       ...item,
-    //       marker: marker
-    //     });
-    //   }
-    //   Object.keys(key.storeList).forEach((listKey) => {
-    //       if (
-    //         key.storeList[listKey].color === marker &&
-    //         listKey !== targetList && // ← Prevent duplicate push
-    //         !key.storeList[listKey].item.some(coin => coin.symbol === item.symbol)&&
-    //         key.storeList[listKey].color != ""
-    //       ) {
-    //         key.storeList[listKey].item.push({
-    //           ...item
-    //         });
-    //         }
-    //   });
-    //   }
-    // })
-    // --------------
-  // const { item, list, screenId, panelIndex } = action.payload;
-  // const activeArray = state.allscreens.find(arr => arr.id === screenId);
-
-  // if (!activeArray) return;
-
-  // const screen = activeArray.screens[panelIndex];
-  // if (!screen) return;
-
-  // const targetList = screen.activeList ?? list;
-  // const marker = screen.markers[item.symbol] || '';
-
-  // const alreadyAddedToTarget = screen.storeList[targetList].item.some(
-  //   coin => coin.symbol === item.symbol
-  // );
-
-  // if (!alreadyAddedToTarget) {
-  //   screen.storeList[targetList].item.push({
-  //     ...item,
-  //     marker: marker
-  //   });
-  // }
-
-  // // если нужно учитывать цветовые маркеры
-  // Object.keys(screen.storeList).forEach(listKey => {
-  //   if (
-  //     screen.storeList[listKey].color === marker &&
-  //     listKey !== targetList &&
-  //     !screen.storeList[listKey].item.some(coin => coin.symbol === item.symbol) &&
-  //     screen.storeList[listKey].color !== ''
-  //   ) {
-  //     screen.storeList[listKey].item.push({
-  //       ...item
-  //     });
-  //   }
-  // });
   },
   addMarker: (state, action: PayloadAction<{symbol: string, marker: string, screenId: number, panelIndex: number}>) => {
       const { symbol, marker, screenId, panelIndex} = action.payload;
@@ -218,7 +149,7 @@ export const coins = createSlice({
         bid1Price: btsUsdt.bid1Price,
         src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg',
         symbol: 'BTCUSDT',
-        id: '',
+        id: null,
         lines: [...activedState.CoinData.lines]
       };
       activedState.chartSettings = {
@@ -279,12 +210,6 @@ export const coins = createSlice({
     const activedState = activeArray?.screens[panelIndex];
     if(!activedState) return;
     activedState.isLogo = isLogo;
-    // state.allscreens.forEach(screen => {
-    //   screen.screens.forEach(el => {
-    //     el.isLogo = action.payload
-    //   })
-    // })
-
   },
   createNewList: (state, action: PayloadAction<{panelIndex: number, listName: string, item?: MarketData, screenId?: number}>) => {
     const {listName, item, screenId, panelIndex} = action.payload
@@ -328,11 +253,57 @@ export const coins = createSlice({
     const {list, screenId, panelIndex} = action.payload;
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
     const activedState = activeArray?.screens[panelIndex];
+
     if(!activedState) return;
-    delete activedState.storeList[list]
+    delete activedState.storeList[list];
   },
-  addHorzLine: (state, action: PayloadAction<{screenId: number, hlPoint: LineData, panelIndex: number}>) => {
-    const {hlPoint, screenId, panelIndex} = action.payload;
+
+  addLineFlag: (state, action: PayloadAction<LineType>) => {
+    switch (action.payload) {
+      case LineType.HORIZONTAL_LINE:
+        state.flagLine.isLineHrz = true;
+        state.flagLine.isLineTrend = false;
+        state.flagLine.isRay = false;
+        break;
+      case LineType.HORIZONTAL_RAY:
+        state.flagLine.isRay = true;
+        state.flagLine.isLineHrz = false;
+        state.flagLine.isLineTrend = false;
+        break;
+      case LineType.TREND:
+        state.flagLine.isRay = false;
+        state.flagLine.isLineHrz = false;
+        state.flagLine.isLineTrend = true;
+        break;
+      case LineType.NONE:
+        state.flagLine.isLineHrz = false;
+        state.flagLine.isLineTrend = false;
+        state.flagLine.isRay = false;
+    }
+    
+  },
+  removeHorzLine: (state, action: PayloadAction<{lineId: string | null, screenId: number, panelIndex: number}>) => {
+    const {screenId, panelIndex, lineId} = action.payload;
+    const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArray?.screens[panelIndex];
+    if(!activedState) return
+    const defaultChartDataId = activedState.CoinData.id;
+
+    if(!defaultChartDataId){
+      activedState.CoinData.lines = activedState.CoinData.lines.filter(item => item.id !== lineId)
+    }
+
+    const activeList = activedState?.activeList;
+    if(!activeList) return;
+    const items = activedState?.storeList[activeList].item;
+    if (!items) return;
+    const activeSymbol = activedState?.CoinData.symbol;
+    const coin = items.find(c => c.symbol === activeSymbol);
+    if (!coin?.lines) return 
+      coin.lines = coin.lines.filter((coin) => coin.id !== lineId);
+  },
+  addCustomLine: (state, action: PayloadAction<{lineId?: string, screenId: number, hlPoint: AnyLine, panelIndex: number}>) => {
+    const { hlPoint, screenId, panelIndex } = action.payload;
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
     const activedState = activeArray?.screens[panelIndex];
     const activeList = activedState?.activeList;
@@ -341,6 +312,7 @@ export const coins = createSlice({
     if (!items) return;
     const activeSymbol = activedState?.CoinData.symbol;
     const coin = items.find(c => c.symbol === activeSymbol);
+
     if (coin) {
       if (!coin.lines) {
         coin.lines = [];
@@ -349,36 +321,81 @@ export const coins = createSlice({
     }
 
     if(!activedState.CoinData.id){
-        activedState.CoinData.lines.push(hlPoint);
+      activedState.CoinData.lines.push(hlPoint);
     }
   },
-  addLineFlag: (state, action: PayloadAction<boolean>) => {
-    state.flagLine = action.payload
-  },
-  removeHorzLine: (state, action: PayloadAction<{screenId: number, panelIndex: number, checkedLine: number | null}>) => {
-    const {screenId, panelIndex, checkedLine} = action.payload;
-    const activeArray = state.allscreens.find(arr => arr.id === screenId);
-    const activedState = activeArray?.screens[panelIndex];
-    if(!activedState) return
-    const defaultChartDataId = activedState.CoinData.id;
-    if(!defaultChartDataId){
-      activedState.CoinData.lines = activedState.CoinData.lines.filter((coin) => coin.price !== checkedLine);
+  updateLinesEdit: (
+    state,
+    action: PayloadAction<{
+      lineId: string;
+      screenId: number;
+      lineObject: AnyLine;
+      panelIndex: number;
+    }>
+  ) => {
+  const { lineId, lineObject, screenId, panelIndex } = action.payload;
+  const activeArray = state.allscreens.find(arr => arr.id === screenId);
+  const activedState = activeArray?.screens[panelIndex];
+  if (!activedState) return;
+  const activeList = activedState.activeList;
+  if (!activeList) return;
+  const items = activedState.storeList[activeList].item;
+  if (!items) return;
+  const activeSymbol = activedState.CoinData.symbol;
+  let chartFromList = items.find(c => c.symbol === activeSymbol);
+  const isChartFromList = activedState.CoinData.id;
+  // --- обновляем CoinData (для горизонтальных)
+  if (!isChartFromList) {
+    const updatedLines = activedState.CoinData.lines.map(line => {
+      if (line.id === lineId && line.name === "HorizontalRay") {
+        const { price, timestamp } = lineObject as LineData;
+        return { ...line, price, timestamp };
+      }else if(line.id === lineId && line.name === "HorizontalLine"){
+        const { price, timestamp } = lineObject as HrzLineData;
+        return { ...line, price, timestamp };
+      }else if(line.id === lineId && line.name === "TrendLine"){
+        const { points } = lineObject as TrendLine;
+        return { ...line,  points: [...points] };
+      }
+      return line;
+    });
+
+    activedState.CoinData = {
+      ...activedState.CoinData,
+      lines: updatedLines,
+    };
+  }
+
+    if (chartFromList) {
+      if (!chartFromList.lines) return;
+      const updatedLines = chartFromList.lines.map(line => {
+        if (line.id === lineId && line.name === "HorizontalRay"){
+          const { price, timestamp } = lineObject as LineData;
+          return { ...line, price, timestamp };
+        }
+        if (line.id === lineId && line.name === "HorizontalLine"){
+          const { price, timestamp } = lineObject as LineData;
+          return { ...line, price, timestamp };
+        }
+        if (line.id === lineId && line.name === "TrendLine") {
+          const { points } = lineObject as TrendLine;
+          return { ...line, points: [...points] };
+        }
+        return line;
+      });
+      activedState.storeList[activeList].item = items.map(c =>
+        c.symbol === activeSymbol ? { ...c, lines: updatedLines } : c
+      );
     }
-    const activeList = activedState?.activeList;
-    if(!activeList) return;
-    const items = activedState?.storeList[activeList].item;
-    if (!items) return;
-    const activeSymbol = activedState?.CoinData.symbol;
-    const coin = items.find(c => c.symbol === activeSymbol);
-    if (!coin?.lines) return 
-      coin.lines = coin.lines.filter((coin) => coin.price !== checkedLine);
-    },
+
+  }
 }})
 
 export const {
+  updateLinesEdit,
   removeHorzLine,
   addLineFlag,
-  addHorzLine,
+  addCustomLine,
   setuFullscreen,
   setActivePanelIndex,
   setActivePanelIcon,

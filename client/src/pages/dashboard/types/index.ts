@@ -34,6 +34,19 @@ export interface CoinsData {
   marker: string;
 }
 
+export enum LineType {
+  HORIZONTAL_RAY = 'horizontal-ray',
+  HORIZONTAL_LINE = 'horizontal-line',
+  TREND = 'trendline',
+  NONE = 'none'
+}
+
+export type FlagIsLine = {
+  isLineHrz: boolean;
+  isLineTrend: boolean;
+  isRay: boolean;
+}
+
 export type MarketData = 
   Pick<CoinsData, 
   "turnover24h" 
@@ -51,12 +64,28 @@ export type MarketData =
 export interface LineData {
   price: number;
   timestamp: UTCTimestamp;
+  name: "HorizontalRay";
+  id: string;
 }  
-
-export interface MarketDataWithLines extends MarketData {
-  lines?: LineData[];
+export interface HrzLineData {
+  price: number;
+  timestamp: UTCTimestamp;
+  name: "HorizontalLine";
+  id: string;
 }
-
+export interface TrendPoint {
+  price: number;
+  timestamp: UTCTimestamp;
+}
+export interface TrendLine {
+  points: TrendPoint[];
+  name: "TrendLine";
+   id: string;
+}
+export type AnyLine = LineData | TrendLine | HrzLineData; 
+export interface MarketDataWithLines extends MarketData {
+  lines?: AnyLine[];
+}
 export type TickerProps = {
   key: string;
   name: string;
@@ -64,14 +93,12 @@ export type TickerProps = {
   turnover: number;
   volume: number;
 };
-
 export type InitiaLChartSettings = {
     interval: string | undefined;
     symbol: string;
     limit: string;
     category: string;
 }
-
 export type Kline = {
     time: UTCTimestamp;
     open: number;
@@ -141,12 +168,6 @@ export interface FullTickerProps extends TickerProps{
   panelIndex: number;
 }
 
-// interface itemList{
-//   item: MarketData[];
-//   color: string;
-//   colorName: string;
-// }
-
 interface itemList{
   item: MarketDataWithLines[];
   color: string;
@@ -175,7 +196,7 @@ export interface AllDataCoin {
     CoinData: DefaultCoin & {
     src: string;
     symbol: string;
-    lines: LineData[];
+    lines: AnyLine[];
     };
     isLogo: boolean;
     storeList: NamedMarketDataLists;

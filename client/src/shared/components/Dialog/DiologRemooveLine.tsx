@@ -3,18 +3,19 @@ import IconBacket from "../Icons/IconBacket";
 import {removeHorzLine } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 
 interface Props {
-    checkedLine: number | null;
     screenId: number;
     panelIndex: number;
+    lineId: string | null;
     setIsLine: (args: boolean) => void;
 }
-export function DiologRemooveLine({setIsLine, checkedLine, screenId, panelIndex}: Props) {
+export function DiologRemooveLine({setIsLine, lineId, screenId, panelIndex}: Props) {
     const dispatch = useAppDispatch()
+    
     return (
         <div
             onClick={() => 
                 {
-                    dispatch(removeHorzLine({checkedLine, screenId, panelIndex}))
+                    dispatch(removeHorzLine({screenId, panelIndex, lineId}))
                     setIsLine(false)
                 }
             }

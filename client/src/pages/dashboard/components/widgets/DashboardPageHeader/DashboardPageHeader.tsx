@@ -5,13 +5,14 @@ import { Tooltip } from 'react-tooltip';
 
 import { DropDownOfHeadesToolbar } from '@/shared/components/DropdownMenu/DropDownOfHeadesToolbar';
 import { Button } from '@/components/ui/button';
+import { LineType } from '@/pages/dashboard/types';
 
 export default function DashboardPageHeader() {
   const screenId = useAppSelector(store => store.coins.mainScreen);
   const panelIndex = useAppSelector(store => store.coins.panelIndex);
   const allScreens = useAppSelector(state => state.coins.allscreens);
   const dispatch = useAppDispatch();
-  const isHrzLine = useAppSelector(state => state.coins.flagLine);
+  const isLine = useAppSelector(state => state.coins.flagLine);
   const activeScreen = allScreens.find(el => el.id === screenId);
   const activeArray = activeScreen?.screens?.[panelIndex];
   const chartSettings = activeArray?.chartSettings;
@@ -64,13 +65,43 @@ export default function DashboardPageHeader() {
         <DropDownOfHeadesToolbar/>
       </div>
       <button 
-        onClick={() => dispatch(addLineFlag(true))}
-        data-tooltip-id="tooltip-hrz-line"
+        onClick={() => dispatch(addLineFlag(LineType.HORIZONTAL_RAY))}
+        data-tooltip-id="tooltip-hrz-ray"
         data-tooltip-content="Горизонтальный луч"
-        className={`cursor-pointer rounded-[4px] ml-2 p-0 text-[rgba(245,166,35,1)] hover:bg-gray-800 ${isHrzLine && 'bg-gray-800'}`}
+        className={`cursor-pointer rounded-[4px] ml-2 p-0 text-[rgba(41,98,255,1)] hover:bg-gray-800 ${isLine.isRay && 'bg-gray-800'}`}
         >
           <svg  style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="30" height="30"><g fill="currentColor" fillRule="nonzero"><path d="M8.5 15h16.5v-1h-16.5z"></path><path d="M6.5 16c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
       </button>
+      <button
+      onClick={() => dispatch(addLineFlag(LineType.TREND))}
+      className={`cursor-pointer rounded-[4px] ml-2 p-0 text-[rgba(41,98,255,1)] hover:bg-gray-800 ${isLine.isLineTrend && 'bg-gray-800'}`}
+        data-tooltip-id="tooltip-trend-line"
+        data-tooltip-content="Линия Теренда"
+      >
+        <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fill-rule="nonzero"><path d="M7.354 21.354l14-14-.707-.707-14 14z"></path><path d="M22.5 7c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5zM5.5 24c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
+      </button>
+      <button 
+        onClick={() => dispatch(addLineFlag(LineType.HORIZONTAL_LINE))}
+        data-tooltip-id="tooltip-hrz-line"
+        data-tooltip-content="Горизонтальная линия"
+        className={`cursor-pointer rounded-[4px] ml-2 p-0 text-[rgba(41,98,255,1)] hover:bg-gray-800 ${isLine.isLineHrz && 'bg-gray-800'}`}
+        >
+         <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fill-rule="nonzero"><path d="M4 15h8.5v-1h-8.5zM16.5 15h8.5v-1h-8.5z"></path><path d="M14.5 16c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
+      </button>
+      <Tooltip 
+        id="tooltip-hrz-ray" 
+        variant="light"
+        place='bottom-end'
+        className='z-1000'
+        style={{ fontSize: '18px' }}
+      />
+      <Tooltip 
+        id="tooltip-trend-line" 
+        variant="light"
+        place='bottom-end'
+        className='z-1000'
+        style={{ fontSize: '18px' }}
+      />
       <Tooltip 
         id="tooltip-hrz-line" 
         variant="light"

@@ -23,7 +23,6 @@ const TickerItem = ({panelIndex, deliteCoin, addCoin, symbol, src, flag}: Props)
     const ativeArray = allScreens.find(el => el.id === screenId);
 
     if(!ativeArray) return;
-    // const activeMarkerArray = ativeArray.screens.find(item => item.isActive === true)
     const activeMarkerArray = ativeArray.screens[panelIndex]
     let marker = activeMarkerArray?.markers[symbol] || ''
     

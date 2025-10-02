@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from '@/app/store/store';
 import TradingInfoPanel from '../TradingInfoPanel/TradingInfoPanel';
 import { useRialTimeKlines } from '@/pages/dashboard/hooks/useRialTimeKlines';
 import { useGetKlinesQuery } from '@/pages/dashboard/coinData/services/getApiCoins';
-import { Kline, Cand } from '@/pages/dashboard/types';
+import { Kline, Cand, LineData, TrendLine, LineType, HrzLineData } from '@/pages/dashboard/types';
 import { DEFAULT_CHART_SETTINGS } from '@/pages/dashboard/coinData/constants/defaultSettings';
-import { setuFullscreen, addHorzLine, addLineFlag } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { setuFullscreen, addCustomLine, addLineFlag, updateLinesEdit } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import './styles.module.css';
 import DiologRemooveLine from '@/shared/components/Dialog/DiologRemooveLine';
 
@@ -18,7 +18,7 @@ interface Props {
 
 function Chart({panelIndex}: Props) {
     const [isLine, setIsLine] = useState(false)
-    const [checkedLine, setCheckedLine] = useState<number | null>(null)
+    const [lineId, setLineId] = useState<string | null>(null)
     const dispatch = useAppDispatch();
     const lineToolsRef = useRef<any>([]);
     const chartContainerRef = useRef<HTMLDivElement | null>(null);
@@ -26,7 +26,7 @@ function Chart({panelIndex}: Props) {
     const candlestickSeriesRef = useRef<any>(null);
     const histogramSeriesRef = useRef<any>(null);
     const fullSceenChart = useAppSelector(state => state.coins.fullscreenChartId);
-    const isHrzLine = useAppSelector(state => state.coins.flagLine);
+    const isLineType = useAppSelector(state => state.coins.flagLine);
     const screenId = useAppSelector(state => state.coins.mainScreen);
     const allScreens = useAppSelector(state => state.coins.allscreens);
     const activeScreen = allScreens.find(el => el.id === screenId);
@@ -36,12 +36,12 @@ function Chart({panelIndex}: Props) {
     const activeItem = activeArray.storeList[activeList].item;
     const activeSymbol = activeArray.CoinData.symbol;
     const horzLineOfactiveItemArray = activeItem.find(c => c.symbol === activeSymbol)?.lines;
-    const horzLineOfactiveItems = horzLineOfactiveItemArray || [];
-    const horzLineOfDefaultCoin = activeArray.CoinData.lines;
+    const linesOfactiveList = horzLineOfactiveItemArray || [];
+    const linesOfDefaultList = activeArray.CoinData.lines;
     if(!activeArray) return;
     const chartSettings = activeArray?.chartSettings;
     if(!chartSettings) return;
-    
+
     useRialTimeKlines({candlestickSeriesRef, panelIndex});
     const { data: klinesData } = useGetKlinesQuery( 
         chartSettings ?? DEFAULT_CHART_SETTINGS, {
@@ -55,7 +55,7 @@ function Chart({panelIndex}: Props) {
     const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
     const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
     const defaultPanelChartData = activeArray.CoinData.id;
-    
+// ------ Chart -----------------------------
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
         const Chart = window.LightweightCharts.createChart(chartContainerRef.current);
@@ -82,7 +82,7 @@ function Chart({panelIndex}: Props) {
                 barSpacing: 3,
                 minBarSpacing: 2,
                 fixLeftEdge: true,
-                fixRightEdge: true,
+                fixRightEdge: false,
             },
         };
         Chart.applyOptions(newOptions);
@@ -96,115 +96,360 @@ function Chart({panelIndex}: Props) {
         histogramSeriesRef.current.priceScale().applyOptions({
             scaleMargins: { top: 0.9, bottom: 0 },
         });
+
         histogramSeriesRef.current.setData(volume);
-        renderLines()
         return () => {
             Chart.remove();
         }
     }, [chartSettings]);
+// --------- % Percent ranger % --------------
+//     useEffect(() => {
+//         if (!chartInstance.current) return;
+//         function percentRenger(param: MouseEventParams){
+//             if (!param.point) return;
+//             const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+//             const clickedTime = param.time;
+//             if (clickedPrice == null || clickedTime == null) return;
+//             const lineId = `percent-range-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+//             const rPrice1 = clickedPrice;
+//             const rTS1 = clickedTime as UTCTimestamp;
+//             const rPoint1 = { price: rPrice1, timestamp: rTS1};
+//             const rPrice2 = rPrice1 * (1 + 2 / 100);
 
+//             const rTS2 = rTS1 + 100000;
+//             const rPoint2 = { price: rPrice2, timestamp: rTS2 };
+
+//             const diff = rPrice2 - rPrice1;
+//             const percent = ((diff / rPrice1) * 100).toFixed(2);
+
+//        const r1 =  chartInstance.current.addLineTool('PriceRange', [rPoint1, rPoint2], {
+//             text: {
+//                 value: `Δ ${diff.toFixed(2)} (${percent}%)`,  // <-- показываем и разницу, и %
+//                 alignment: 'left',
+//                 font: {
+//                 color: 'rgba(41,98,255,1)',
+//                 size: 14,
+//                 family: 'Arial',
+//                 },
+//             },
+//             priceRange: {
+//                 background: { color: 'rgba(156,39,176,0.2)' },
+//                 border: { color: 'rgba(39,176,80,1)', width: 2 },
+//             },
+//                 visible: true,
+//                 editable: true,
+//             });
+
+//             console.log(r1)
+//         }
+        
+// chartInstance.current.subscribeClick(percentRenger)
+//         if(isLineType.isLineHrz){
+//             chartInstance.current.subscribeClick(percentRenger)
+//         }     
+//         return () => {
+//             chartInstance.current.unsubscribeClick(percentRenger);
+//         }
+//     },[chartSettings])
+// --------- newHrzLine ----------------------
+    function renderHrzLine(){
+            if (!chartInstance.current) return;
+            if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
+                    linesOfDefaultList.forEach(el => {
+                        if(el.name === "HorizontalLine"){
+                            let price = el.price;
+                            let lineData = {price: price, timestamp: el.timestamp}
+                            const lineTool = chartInstance.current.addLineTool("HorizontalLine", [lineData], {
+                                    id: el.id,
+                                    line: {"color": "rgba(41,98,255,1)",
+                                        "width": 2,
+                                        "style": 0,
+                                        "join": "round",
+                                        "cap": "square",
+                                        "end": {
+                                            "left": 0,
+                                            "right": 0
+                                        },
+                                        "extend": {
+                                            "right": true,
+                                            "left": true
+                                        }},
+                                    visible: true,
+                                    editable: true,
+                                });
+                            lineToolsRef.current.push({
+                                tool: lineTool
+                            });  
+                    }
+                });
+            }else{
+                linesOfactiveList.forEach(el => {
+                    if(el.name === "HorizontalLine"){
+                        let price = el.price;
+                        let lineData = {price: price, timestamp: el.timestamp}
+                        const lineTool = chartInstance.current.addLineTool("HorizontalLine", [lineData], {
+                            id: el.id,
+                            line: {
+                                "color": "rgba(41,98,255,1)",
+                                "width": 2,
+                                "style": 0,
+                                "join": "round",
+                                "cap": "square",
+                                "end": {
+                                    "left": 0,
+                                    "right": 0
+                                },
+                                "extend": {
+                                    "right": true,
+                                    "left": true
+                                }
+                            },
+                            visible: true,
+                            editable: true,
+                        });
+                        lineToolsRef.current.push({
+                            tool: lineTool
+                        });    
+                    }
+                });
+            }
+    }
     useEffect(() => {
         if (!chartInstance.current) return;
-        function newHOrzLine(param: MouseEventParams){
+            function newHrzLine(param: MouseEventParams){
             if (!param.point) return;
                 const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
                 const clickedTime = param.time;
                 if (clickedPrice == null || clickedTime == null) return;
-                    const hlPrice = clickedPrice;
-                    const hlTS = clickedTime as UTCTimestamp;
-                    const hlPoint = {price: hlPrice, timestamp: hlTS};
-                    dispatch(addHorzLine({screenId, hlPoint, panelIndex}));
-                    dispatch(addLineFlag(false));
-                    chartInstance.current.timeScale().setVisibleLogicalRange(
-                        chartInstance.current.timeScale().getVisibleLogicalRange()
-                    );
-            }
-        if(isHrzLine){
-            chartInstance.current.subscribeClick(newHOrzLine)
+                const lineId = `hrz-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+                const hlPrice: number = clickedPrice;
+                const hlTS = clickedTime as UTCTimestamp;
+                const hlPoint: HrzLineData = {name: "HorizontalLine", price: hlPrice, timestamp: hlTS, id: lineId};
+
+                dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
+                dispatch(addLineFlag(LineType.NONE));
+
+                chartInstance.current.timeScale().setVisibleLogicalRange(
+                    chartInstance.current.timeScale().getVisibleLogicalRange()
+                );
         }
+        if(isLineType.isLineHrz){
+            chartInstance.current.subscribeClick(newHrzLine)
+        }     
         return () => {
-            chartInstance.current.unsubscribeClick(newHOrzLine);
+            chartInstance.current.unsubscribeClick(newHrzLine);
         }
-    }, [isHrzLine, chartSettings])
-
-    useEffect(() => { 
-        if (!chartInstance.current) return;
-        const findClosestLine = (
-            clickedPrice: number,
-            clickedTime: number,
-            lines: any[]
-        ) => {
-        if (!lines || lines.length === 0) return null;
-        const validLines = lines.filter(line => clickedTime >= line.tool.Rg.Ls[0].timestamp);
-            if (validLines.length === 0) return null;
-            return validLines.reduce((closest: any, current: any) => {
-                const currentDiff = Math.abs(clickedPrice - current.tool.Rg.Ls[0].price);
-                const closestDiff = Math.abs(clickedPrice - closest.tool.Rg.Ls[0].price);
-                return currentDiff < closestDiff ? current : closest;
-            });
-    };
-
-    const isClickNearLine = (clickedY: number, linePrice: number, thresholdPx = 5) => {
-        const lineY = candlestickSeriesRef.current.priceToCoordinate(linePrice);
-        if (lineY == null) return false;
-        return Math.abs(clickedY - lineY) <= thresholdPx;
-    };
-
-    const handleChartClick = (param: MouseEventParams) => {
-        if (!param.point || !param.time) return;
-
-        const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
-        const clickedY = param.point.y;
-        const clickedTime = param.time as number;
-
-        const closestLine = findClosestLine(clickedPrice, clickedTime, lineToolsRef.current);
-        if (closestLine) {
-        const linePrice = closestLine.tool.Rg.Ls[0].price;
-        if (isClickNearLine(clickedY, linePrice)) {
-                setIsLine(true)
-                setCheckedLine(linePrice)
-            }else{
-                setIsLine(false)
-            }
-        }
-    };
-
-    chartInstance.current.subscribeClick(handleChartClick);
-    return () => chartInstance.current.unsubscribeClick(handleChartClick);
-    }, [lineToolsRef.current, horzLineOfactiveItems, isLine]);
-
-    function renderLines(){
+    },[chartSettings, isLineType.isLineHrz])
+// -------- newTrendLine ------------
+    function renderTrendLine(){
         if(chartInstance.current){
-            chartInstance.current.removeAllLineTools?.();
-                if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
-                    horzLineOfDefaultCoin.forEach(el => {
-                    let lineTool = chartInstance.current.addLineTool("HorizontalRay", [el], {
-                        line: { color: "rgba(245,166,35,1)", width: 1 },
-                        visible: true,
-                        editable: true,
+            if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
+                    linesOfDefaultList.forEach(el => {
+                        if(el.name === "TrendLine"){
+                            const lineTool = chartInstance.current.addLineTool('TrendLine', el.points.map((p: any) => ({ ...p })), {
+                                id: el.id,
+                                "line": {
+                                    "color": "rgba(41,98,255,1)",
+                                    "width": 2,
+                                    "style": 0,
+                                    "join": "round",
+                                    "cap": "square",
+                                    "end": {
+                                        "left": 0,
+                                        "right": 0
+                                    },
+                                    "extend": {
+                                        "right": false,
+                                        "left": false
+                                    }
+                                },
+                                "visible": true,
+                                "editable": true
+                            });
+                            lineToolsRef.current.push({
+                                tool: lineTool
+                            });
+                        }
                     });
-                    lineToolsRef.current.push({
-                        tool: lineTool
-                    });   
-                });
             }else{
-                horzLineOfactiveItems.forEach(el => {
-                let lineTool = chartInstance.current.addLineTool("HorizontalRay", [el], {
-                        line: { color: "rgba(245,166,35,1)", width: 1 },
-                        visible: true,
-                        editable: true,
-                    });
-                    lineToolsRef.current.push({
-                        tool: lineTool
-                    });    
+                linesOfactiveList.forEach(el => {
+                    if(el.name === "TrendLine"){
+                        const lineTool = chartInstance.current.addLineTool('TrendLine', el.points.map((p: any )=> ({ ...p })), {
+                            id: el.id,
+                                "line": {
+                                    "color": "rgba(41,98,255,1)",
+                                    "width": 2,
+                                    "style": 0,
+                                    "join": "round",
+                                    "cap": "square",
+                                    "end": {
+                                        "left": 0,
+                                        "right": 0
+                                    },
+                                    "extend": {
+                                        "right": false,
+                                        "left": false
+                                    }
+                                },
+                                "visible": true,
+                                "editable": true
+                            });
+
+                            lineToolsRef.current.push({
+                                tool: lineTool
+                            });
+                    }
                 });
             }
         }
     }
+    useEffect(() => {
+        if (!chartInstance.current) return;
+            function newTrendLine(param: MouseEventParams){
+            if (!param.point) return;
+                const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+                const clickedTime = param.time;
+                if (clickedPrice == null || clickedTime == null) return;
+                const lineId = `trend-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+                const tlPrice1: number = clickedPrice;
+                const tlTS1 = clickedTime as UTCTimestamp;
+                const tlPoint1 = {price: tlPrice1, timestamp: tlTS1};
+                const tlTS2 = (tlTS1 + 100000) as UTCTimestamp
+                const tlPrice2 = tlPrice1 + tlPrice1 / 100;
+                const tlPoint2 = {price: tlPrice2, timestamp: tlTS2};
+                const hlPoint: TrendLine = {name: "TrendLine", points: [tlPoint1, tlPoint2], id: lineId}
+
+                dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
+                dispatch(addLineFlag(LineType.NONE));
+
+                chartInstance.current.timeScale().setVisibleLogicalRange(
+                    chartInstance.current.timeScale().getVisibleLogicalRange()
+                );
+        }
+        if(isLineType.isLineTrend){
+            chartInstance.current.subscribeClick(newTrendLine)
+        }     
+        return () => {
+            chartInstance.current.unsubscribeClick(newTrendLine);
+        }
+    },[chartSettings, isLineType.isLineTrend])
+// ---------------- newHOrzRay --------------
+    function renderHrzRay(){
+        if (!chartInstance.current) return;
+                if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
+                    linesOfDefaultList.forEach(el => {
+                        if(el.name === "HorizontalRay"){
+                            let price = el.price;
+                            let lineData = {price: price, timestamp: el.timestamp}
+                            const lineTool = chartInstance.current.addLineTool("HorizontalRay", [lineData], {
+                                    id: el.id,
+                                    line: { color: "rgba(41,98,255,1)", width: 2 },
+                                    visible: true,
+                                    editable: true,
+                                });
+                            lineToolsRef.current.push({
+                                tool: lineTool
+                            });  
+                    }
+                });
+            }else{
+                linesOfactiveList.forEach(el => {
+                    if(el.name === "HorizontalRay"){
+                        let price = el.price;
+                        let lineData = {price: price, timestamp: el.timestamp}
+                        const lineTool = chartInstance.current.addLineTool("HorizontalRay", [lineData], {
+                            id: el.id,
+                            line: { color: "rgba(41,98,255,1)", width: 2 },
+                            visible: true,
+                            editable: true,
+                        });
+                        lineToolsRef.current.push({
+                            tool: lineTool
+                        });    
+                    }
+                });
+            }
+    }
+    useEffect(() => {
+        if (!chartInstance.current) return;
+        function newHOrzRay(param: MouseEventParams){
+            if (!param.point) return;
+            const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+            const clickedTime = param.time;
+            if (clickedPrice == null || clickedTime == null) return;
+            const hlPrice = clickedPrice;
+            const hlTS = clickedTime as UTCTimestamp;
+            const lineId = `ray-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+            const hlPoint: LineData = {name: "HorizontalRay", price: hlPrice, timestamp: hlTS, id: lineId};
+
+            dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
+            dispatch(addLineFlag(LineType.NONE));
+
+            chartInstance.current.timeScale().setVisibleLogicalRange(
+                chartInstance.current.timeScale().getVisibleLogicalRange()
+            );
+        }
+        if(isLineType.isRay){
+            chartInstance.current.subscribeClick(newHOrzRay)
+        }  
+        return () => {
+            chartInstance.current.unsubscribeClick(newHOrzRay);
+        }
+    },[chartSettings, isLineType.isRay])
+    // --------  handleChartClick ------
+    useEffect(() => {
+        if (!chartInstance.current) return;
+        const handleChartClick = (param: MouseEventParams) => {
+            if (!param.point || !param.time) return;
+            const selectedLines = chartInstance.current.getSelectedLineTools();
+            if (selectedLines && selectedLines.length > 0) {
+                try {
+                    const lineData = JSON.parse(selectedLines);
+                    if (lineData[0]?.options?.id) {
+                        setLineId(lineData[0].options.id);
+                        setIsLine(true);
+                    }
+                } catch (err) {
+                    console.error("Ошибка парсинга selectedLines:", err);
+                }
+            }
+        };
+        chartInstance.current.subscribeClick(handleChartClick);
+        return () => {
+            chartInstance.current.unsubscribeClick(handleChartClick);
+        };
+    }, [chartSettings]);
+    //--- handleChartBackgroundClick ---
+    useEffect(() => {
+    if (!chartInstance.current) return;
+    const handleChartBackgroundClick = () => {
+        const selected = chartInstance.current.getSelectedLineTools?.();
+        let parsed;
+        try {
+        parsed = typeof selected === 'string' ? JSON.parse(selected) : selected;
+        } catch {
+        parsed = null;
+        }
+
+        if (!parsed || parsed.length === 0) {
+        setIsLine(false);
+        setLineId(null);
+        }
+    };
+    chartInstance.current.subscribeClick(handleChartBackgroundClick);
+    return () => {
+        chartInstance.current.unsubscribeClick(handleChartBackgroundClick);
+    };
+    }, []);
 
     useEffect(() => {
-        renderLines();
-    }, [horzLineOfactiveItems]);
+        if (!chartInstance.current) return;
+        chartInstance.current.removeAllLineTools?.();
+        renderHrzRay();
+        renderTrendLine();
+        renderHrzLine();
+    }, [linesOfactiveList, linesOfDefaultList, chartSettings]);
 
     useEffect(() => {
         if (candlestickSeriesRef.current && memoizedData) {
@@ -244,8 +489,69 @@ function Chart({panelIndex}: Props) {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-
     }, [fullSceenChart]);
+
+    useEffect(() => {
+    if (!chartInstance.current) return;
+    const handleLineEdit = (lineTool: any) => {
+        const { selectedLineTool } = lineTool;
+        const { toolType: name, options, points} = selectedLineTool;
+        const { id: lineId } = options;
+        const firstPoint = points[0];
+        if (!lineId || !name) return;
+        if (!firstPoint) return;
+        const { price, timestamp } = firstPoint;
+        switch(name){
+            case "HorizontalRay": 
+                if (price === undefined || timestamp === undefined) return;
+                dispatch(updateLinesEdit({
+                lineId,
+                screenId,
+                panelIndex,
+                lineObject: {
+                    name,
+                    id: lineId,
+                    price,
+                    timestamp,
+                } as LineData
+            }));
+            break;
+            case "HorizontalLine": 
+                if (price === undefined || timestamp === undefined) return;
+                dispatch(updateLinesEdit({
+                lineId,
+                screenId,
+                panelIndex,
+                lineObject: {
+                    name,
+                    id: lineId,
+                    price,
+                    timestamp,
+                } as HrzLineData
+            }));
+            break;
+            case "TrendLine": 
+                if (!points) return;
+                dispatch(updateLinesEdit({
+                lineId,
+                screenId, 
+                panelIndex,
+                lineObject: {
+                    name,
+                    id: lineId,
+                    points: points.map((p: any) => ({ ...p }))
+                } as TrendLine
+            }));
+            break;
+            default:
+            console.warn(`Не поддерживается линия: ${name}`);
+        } 
+    };
+    chartInstance.current.subscribeLineToolsAfterEdit(handleLineEdit);
+    return () => {
+        chartInstance.current.unsubscribeLineToolsAfterEdit?.(handleLineEdit);
+    };
+    }, [chartSettings]);
 
     return (
         <div className={fullSceenChart === panelIndex ? 'absolute top-0 left-0 h-full w-full z-[9999]' : `section-chart max-w-full w-[100%] h-[100%]`}>
@@ -254,8 +560,8 @@ function Chart({panelIndex}: Props) {
                     && 
                     <DiologRemooveLine 
                         screenId={screenId} 
-                        panelIndex= {panelIndex} 
-                        checkedLine={checkedLine}
+                        panelIndex={panelIndex} 
+                        lineId={lineId}
                         setIsLine={setIsLine}
                     />
                 }
@@ -263,8 +569,6 @@ function Chart({panelIndex}: Props) {
                 <div ref={chartContainerRef} className="chart-wr w-[100%] h-full"></div>
             </div>
         </div>
-
     )
 }
-
 export default Chart;

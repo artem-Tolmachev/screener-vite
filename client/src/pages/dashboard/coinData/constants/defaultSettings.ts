@@ -1,7 +1,7 @@
 export interface DefaultCoin{
   ask1Price: string,
   bid1Price: string,
-  id?: string
+  id?: string | null
 }
 
 export interface chartSettings {

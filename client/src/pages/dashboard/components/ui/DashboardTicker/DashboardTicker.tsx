@@ -21,7 +21,6 @@ const DashboardTicker = ({
 
     if(!ativeArray) return;
     const activeMarkerArray = ativeArray.screens[panelIndex];
-    // const activeMarkerArray = ativeArray.screens.find(item => item.isActive === true)
     let marker = activeMarkerArray?.markers[name] || ''
 
     const {markerSettings, isValue, justAddedMarker, setSetVel} = useHendlerMarker();

@@ -18,26 +18,39 @@ function TradingInfoPanel({panelIndex}: Props) {
     const { src, symbol, ask1Price, bid1Price } = selectedItems;
 
     return (
-        <div className='absolute top-0 left-0 z-30 w-[168px]'>
-            <div className='pt-5 pl-5 relative h-[100px] w-full top-0 left-0 text-[var(--color-text-primary)] cursor-pointer'>
-                <div className='ml-5 max-w-full min-w-0 flex-1'>
+        <div className='absolute top-0 left-0 z-30'>
+            <div className='pt-1 pl-2 relative w-[250px] top-0 left-0 text-[var(--color-text-primary)] cursor-pointer'>
+                <div className='max-w-full min-w-0 flex items-center gap-2'>
                     <IconCoin panelIndex={panelIndex} src={src} symbol={symbol} VorceVisible={true}/>
-                </div>
-                <div className='mt-2.5 flex gap-2.5'>
-                    <div
-                        className='text-[1cqw] w-[100px] flex items-center justify-center p-2.5 rounded-[5px] border border-[var(--color-red)] text-[var(--color-red)]'
+                   <div
+                        className='text-[var(--color-red)] text-sm'
                         data-tooltip-id="tooltip"
                         data-tooltip-content="Цена продажи ( Ask )"
                     >
                         {ask1Price ?? '—'}
                     </div>
-                    <div className='text-[1cqw] w-[100px] flex items-center justify-center p-2.5 rounded border border-[var(--color-blue)] text-[var(--color-blue)]'
+                    <div className='text-[var(--color-blue)] text-sm'
                         data-tooltip-id="tooltip"
                         data-tooltip-content="Цена покупки ( Bid )"
                     >
                         {bid1Price ?? '—'}
                     </div>
                 </div>
+                {/* <div className='mt-2.5 flex gap-2.5'>
+                    <div
+                        className='text-[var(--color-red)]'
+                        data-tooltip-id="tooltip"
+                        data-tooltip-content="Цена продажи ( Ask )"
+                    >
+                        {ask1Price ?? '—'}
+                    </div>
+                    <div className='text-[var(--color-blue)]'
+                        data-tooltip-id="tooltip"
+                        data-tooltip-content="Цена покупки ( Bid )"
+                    >
+                        {bid1Price ?? '—'}
+                    </div>
+                </div> */}
             </div>
             <Tooltip 
             id="tooltip" 

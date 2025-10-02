@@ -21,8 +21,8 @@ interface Props {
 const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) => {
     const [isOpen, setIsOpen] = useState<boolean | string>(false);
     const { columns, toggleCheckBox }: IControlCheced = useCollums([
-        { key: 'volume', name: 'Объем', visible: 1 },
         { key: 'price', name: 'Цена', visible: 1 },
+        { key: 'volume', name: 'Объем', visible: 1 },
         { key: 'turnover', name: 'Оборот', visible: 1 }
     ])
     const { data, isLoading } = useGetCoinsQuery();
