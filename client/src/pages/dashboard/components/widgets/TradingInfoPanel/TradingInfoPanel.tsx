@@ -24,39 +24,24 @@ function TradingInfoPanel({panelIndex}: Props) {
                     <IconCoin panelIndex={panelIndex} src={src} symbol={symbol} VorceVisible={true}/>
                    <div
                         className='text-[var(--color-red)] text-sm'
-                        data-tooltip-id="tooltip"
+                        data-tooltip-id={`tooltip ${panelIndex}`}
                         data-tooltip-content="Цена продажи ( Ask )"
                     >
                         {ask1Price ?? '—'}
                     </div>
                     <div className='text-[var(--color-blue)] text-sm'
-                        data-tooltip-id="tooltip"
+                        data-tooltip-id={`tooltip ${panelIndex}`}
                         data-tooltip-content="Цена покупки ( Bid )"
                     >
                         {bid1Price ?? '—'}
                     </div>
                 </div>
-                {/* <div className='mt-2.5 flex gap-2.5'>
-                    <div
-                        className='text-[var(--color-red)]'
-                        data-tooltip-id="tooltip"
-                        data-tooltip-content="Цена продажи ( Ask )"
-                    >
-                        {ask1Price ?? '—'}
-                    </div>
-                    <div className='text-[var(--color-blue)]'
-                        data-tooltip-id="tooltip"
-                        data-tooltip-content="Цена покупки ( Bid )"
-                    >
-                        {bid1Price ?? '—'}
-                    </div>
-                </div> */}
             </div>
             <Tooltip 
-            id="tooltip" 
-            variant="light"
-            style={{ fontSize: '18px' }}
-            place='bottom-end' />
+                id={`tooltip ${panelIndex}`}
+                variant="light"
+                style={{ fontSize: '18px' }}
+                place='bottom-end' />
         </div>
     );
 }

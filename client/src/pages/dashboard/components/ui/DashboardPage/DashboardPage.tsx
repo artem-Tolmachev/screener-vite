@@ -33,7 +33,6 @@ function DashboardPage(){
   const {screensDataArray, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
 
   const { rows, col, side } = layout || {};
-console.log(123)
   if (!screensDataArray || !isActiveList) {
     return <div>Loading data...</div>;
   }
@@ -81,7 +80,6 @@ console.log(123)
                             >
                               <Suspense fallback={<DashboardSkeleton/>}>
                                 <DashboardQuotesSidebarLazy 
-                                //  selectedCoin={selectedCoin}
                                   isActive={isActiveList[panelIndex]}
                                   panelIndex={panelIndex}
                                   screensDataArray={screensDataArray}
