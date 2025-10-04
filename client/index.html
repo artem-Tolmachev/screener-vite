@@ -8,20 +8,7 @@
   </head>
   <body>
     <div id="root"></div>
-      <script>
-        fetch('/version.txt')
-          .then(r => r.text())
-          .then(v => {
-            const current = localStorage.getItem('version');
-            if (current && current !== v) {
-              localStorage.setItem('version', v);
-              location.reload(true);
-            } else {
-              localStorage.setItem('version', v);
-            }
-          });
-      </script>
       <script src="/lightweight-charts.standalone.production.js"></script>     
-    <!-- <script type="module" src="/src/main.tsx"></script> -->
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
