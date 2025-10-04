@@ -8,7 +8,7 @@ import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog"
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useGetCoinsQuery } from "@/pages/dashboard/coinData/services/getApiCoins";
 import ListInfarmation from "@/pages/dashboard/components/ui/ListInfarmation/ListInfarmation";
-import { AllDataCoin, NamedMarketDataLists } from "@/pages/dashboard/types";
+import { NamedMarketDataLists } from "@/pages/dashboard/types";
 
 interface Props {
     listsData: NamedMarketDataLists;
@@ -36,13 +36,6 @@ export function DiologOfAllCoinList({listsData, panelIndex}: Props) {
                 <DialogTitle>Выбрать манету</DialogTitle>
                 </VisuallyHidden>
             </DialogContent>
-            {/* <Tooltip
-                id={`tooltip-add-coin`}
-                variant="light"
-                place='bottom-end'
-                className='z-1000'
-                style={{ fontSize: '18px'}}
-            /> */}
         </Dialog>
     )
 }
