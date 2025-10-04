@@ -16,6 +16,7 @@ import { listRemover, setActiveList, setActivePanelIndex } from "@/pages/dashboa
 import DialogComponentClearList from "../Dialog/DialogComponentClearList";
 import IconBacket from "../Icons/IconBacket";
 import IconFlag from "@/pages/dashboard/components/ui/IconFlag/IconFlag";
+import { DiologOfAllCoinList } from "../Dialog/DiologOfAllCoinList";
 
 interface Props {
   panelIndex: number;
@@ -43,8 +44,12 @@ export function DropdownMenuComponent({panelIndex}: Props)  {
     dispatch(setActiveList({listName: "List", screenId, panelIndex}))
   }
 
+  function DropdownMenuHendler (){
+    dispatch(setActivePanelIndex(panelIndex));
+  }
+
   return (
-    <DropdownMenu onOpenChange={() => dispatch(setActivePanelIndex(panelIndex))}>
+    <DropdownMenu onOpenChange={DropdownMenuHendler}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" 
           className="cursor-pointer"
@@ -53,7 +58,7 @@ export function DropdownMenuComponent({panelIndex}: Props)  {
             {listName !== 'List' && <IconFlag marker={listsArray[listName].color}/>}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-100 bg-gray-800 " align="start">
+        <DropdownMenuContent className="w-100 bg-gray-800" align="start">
           <DropdownMenuLabel className="text-lg text-blue-200  hover:text-blue-200 focus:text-blue-200 cursor-pointer">My Account</DropdownMenuLabel>
           <DropdownMenuGroup>
           {Object.keys(listsArray).map((list, index) => {
@@ -93,8 +98,12 @@ export function DropdownMenuComponent({panelIndex}: Props)  {
           </DropdownMenuGroup>
           <DropdownMenuSeparator/>
           <DropdownMenuGroup>
-            <DialogComponentCreateList setListnameSelect={setListnameSelect} />
+            <DialogComponentCreateList  setListnameSelect={setListnameSelect} />
             <DialogComponentClearList/>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator/>
+          <DropdownMenuGroup>
+            <DiologOfAllCoinList listsData={listsArray} panelIndex={panelIndex}/>
           </DropdownMenuGroup>
         </DropdownMenuContent>
     </DropdownMenu>

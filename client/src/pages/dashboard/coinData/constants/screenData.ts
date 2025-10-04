@@ -33,7 +33,7 @@ export const screenData: AllDataCoin = {
         color: '#192dc5',
         colorName: 'blue'
     },
-    Зеленный: {
+    Зеленый: {
         item: [],
         color: '#19c56c',
         colorName: 'green'

@@ -24,11 +24,8 @@ interface Props {
 export default function DialogComponentCreateList({setListnameSelect}: Props)  {
   const [listName, setListname] = useState('')
   const panelIndex = useAppSelector(store => store.coins.panelIndex);
-
   const addListToStore = useCreateNewWatchList(listName, setListname, panelIndex);
-
   const screenId = useAppSelector(store => store.coins.mainScreen);
-
   const dispatch = useAppDispatch();
 
   function handelSave(){
@@ -37,8 +34,9 @@ export default function DialogComponentCreateList({setListnameSelect}: Props)  {
     dispatch(setActiveList({listName, panelIndex, screenId}))
   }
 
+
   return (
-    <Dialog >
+    <Dialog>
       <DialogTrigger asChild>
           <Button variant="link" className=" flex justify-start text-lg text-blue-200  hover:text-blue-200 cursor-pointer">
             Создать новый список

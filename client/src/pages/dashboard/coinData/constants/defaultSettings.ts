@@ -25,3 +25,6 @@ export const DEFAULT_COIN_OPTION: DefaultCoin = {
   bid1Price: ''
 };
 
+export interface BtcUsdtDate extends chartSettings, DefaultCoin {
+  src: string;
+}

@@ -5,6 +5,7 @@ import { addCoinToList, addMarker, delCoin } from "../coinData/slices/CoinsSlice
 interface Props {
   item: MarketData;
 }
+
 export default function useTickerActions({item}: Props) {
     const dispatch = useAppDispatch();
     const screenOptionGroop = useAppSelector(state => state.coins.allscreens);
@@ -20,7 +21,7 @@ export default function useTickerActions({item}: Props) {
     const ativeMarkerColor = activeListItem.storeList[activeList].color;
    
     const addCoin = () => {
-      if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(activeList)) {
+      if (!['Красный', 'Синий', 'Зеленый', 'Розовый'].includes(activeList)) {
           if (!exist && item) {
           dispatch(addCoinToList({item, list: activeList, screenId, panelIndex}));
       }

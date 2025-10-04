@@ -9,17 +9,15 @@ import { usePersistedInterval } from '@/pages/dashboard/hooks/usePersistedInterv
 import { AllDataCoin, IDashboardHeaderItems, MarketData } from '@/pages/dashboard/types';
 import { addChart, delCoin, removeMarker } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import useShowHide from '@/pages/dashboard/hooks/useShowHide';
-import { DefaultCoin } from '@/pages/dashboard/coinData/constants/defaultSettings';
 
 interface Props {
     columns: IDashboardHeaderItems[];
     isActive: boolean;
     panelIndex: number;
     screensDataArray: AllDataCoin[] | undefined;
-    btsUsdt: DefaultCoin ;
 }
 
-const DashboardTickerOut = ({screensDataArray, panelIndex, columns, btsUsdt}: Props) => {
+const DashboardTickerOut = ({screensDataArray, panelIndex, columns }: Props) => {
     const panel = screensDataArray?.[panelIndex];
     const activeList = panel?.activeList;
     const dispatch = useDispatch();
@@ -32,7 +30,7 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns, btsUsdt}: Pr
     const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
     const activedSymbol = usePersistedInterval();
     const isHovered = useShowHide(false);
-
+    
     useEffect(() => {
         if (activedSymbol) { 
             setActiveSymbol(activedSymbol)
@@ -50,7 +48,7 @@ const DashboardTickerOut = ({screensDataArray, panelIndex, columns, btsUsdt}: Pr
     }
 
     const deliteCoin = (item: MarketData) => {
-        dispatch(delCoin({item, screenId, panelIndex, btsUsdt}));
+        dispatch(delCoin({item, screenId, panelIndex }));
         const symbol = item.symbol;
         dispatch(removeMarker({symbol, screenId, panelIndex}));
     }

@@ -2,10 +2,10 @@ import styles from './styles.module.css';
 import { useEffect, useState } from 'react';
 import DashboardPanelHeader from '../DashboardPanelHeader/DashboardPanelHeader';
 import DashboardTickerOut from '../DashboardTickerOut/DashboardTickerOut';
-import { useAppDispatch } from '@/app/store/store';
+import { useAppDispatch  } from '@/app/store/store';
 import { useGetCoinsQuery } from '@/pages/dashboard/coinData/services/getApiCoins';
 import { useCollums } from '@/pages/dashboard/hooks/useCollums';
-import { defaultLoading } from '@/pages/dashboard/coinData/slices/CoinsSlice';
+import { defaultLoading, setBtcUsdt } from '@/pages/dashboard/coinData/slices/CoinsSlice';
 import { AllDataCoin, IDashboardHeaderItems } from '@/pages/dashboard/types';
 import DashboardSkeleton from '@/shared/components/Skeleton/DashBoardSkeleton';
 
@@ -27,9 +27,16 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) 
     ])
     const { data, isLoading } = useGetCoinsQuery();
     const dispatch = useAppDispatch();
+
     useEffect(() => {
         if (data?.btcUsdt) {
             dispatch(defaultLoading(data.btcUsdt));
+        }
+    }, [data?.btcUsdt]);
+
+    useEffect(() => {
+        if (data?.btcUsdt) {
+            dispatch(setBtcUsdt(data.btcUsdt));
         }
     }, [data?.btcUsdt]);
 
@@ -58,7 +65,6 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) 
                     isActive={isActive}
                     panelIndex={panelIndex}
                     screensDataArray={screensDataArray}
-                    btsUsdt={data?.btcUsdt}
                 />
             </div>
         </div>

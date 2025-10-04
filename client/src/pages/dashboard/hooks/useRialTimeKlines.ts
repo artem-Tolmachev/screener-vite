@@ -33,7 +33,7 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   const chartSettings = chartSettingsArrayScreens[panelIndex].chartSettings
   if(!chartSettings) return;
   const {interval, symbol } = chartSettings;
-
+ 
   useEffect(() => {
     const socket = new WebSocket('wss://stream.bybit.com/v5/public/linear');
     const topic = [

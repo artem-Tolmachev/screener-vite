@@ -32,10 +32,10 @@ const DashboardPanelHeader = ({panelIndex, isOpen, onToggleModal, columns, toggl
             />
             {isOpen === 'settings'
                 && <PopupSettings
-                        isOpen={isOpen}
-                        onToggleModal={onToggleModal}
-                        setLogoVisible={setLogoVisible}
-                        logoVisible={logoVisible}
+                    isOpen={isOpen}
+                    onToggleModal={onToggleModal}
+                    setLogoVisible={setLogoVisible}
+                    logoVisible={logoVisible}
                 >
                     {columns.map((checked) => (
                         <CustomCheckbox

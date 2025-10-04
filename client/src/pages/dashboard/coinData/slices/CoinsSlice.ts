@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {MarketData, AnyLine, FlagIsLine, LineType, LineData, TrendLine, HrzLineData} from "@/pages/dashboard/types";
-import { DefaultCoin } from "../constants/defaultSettings";
+import { BtcUsdtDate, DEFAULT_CHART_SETTINGS, DEFAULT_COIN_OPTION, DefaultCoin } from "../constants/defaultSettings";
 import { screen, screenData, ScreenGroup } from "../constants/screenData";
 import { IconKey } from "@/shared/components/Icons/getIconsOfDiologToolBars";
 
@@ -12,9 +12,15 @@ export interface CoinsState {
   panelIndex: number;
   fullscreenChartId: number | null;
   flagLine: FlagIsLine;
+  btcusdt: BtcUsdtDate;
 }
 
 const initialState: CoinsState = {
+  btcusdt: {
+    ...DEFAULT_CHART_SETTINGS,
+    ...DEFAULT_COIN_OPTION,
+    src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg'
+  },
   allscreens: [screen],
   mainScreen: 0,
   panelActiveId: 0,
@@ -32,6 +38,12 @@ export const coins = createSlice({
   name: 'coins',
   initialState,
   reducers: {
+  setBtcUsdt: (state, action: PayloadAction<DefaultCoin>) => {
+    const {ask1Price, bid1Price} = action.payload;
+    if(!ask1Price || !bid1Price) return
+    state.btcusdt.ask1Price = ask1Price;
+    state.btcusdt.bid1Price = bid1Price;
+  },
   setuFullscreen:  (state, action: PayloadAction<number | null>) => {
     state.fullscreenChartId = action.payload;
   },
@@ -93,7 +105,7 @@ export const coins = createSlice({
     if(!activedState) return
 
     Object.keys(activedState.storeList).forEach((listKey) => {
-      if (!['Красный', 'Синий', 'Зеленный', 'Розовый'].includes(listKey)) return
+      if (!['Красный', 'Синий', 'Зеленый', 'Розовый'].includes(listKey)) return
       const list = activedState.storeList[listKey];
       list.item = list.item.filter((coin) => coin.symbol !== item.symbol);
       if (list.color === marker) {
@@ -134,32 +146,30 @@ export const coins = createSlice({
       if(!activedState) return
       delete activedState.markers[symbol];
   },
-  delCoin: (state, action: PayloadAction<{item: MarketData, screenId: number, panelIndex: number, btsUsdt?: DefaultCoin}>) => {
-    const {item, screenId, panelIndex, btsUsdt} = action.payload;
+  delCoin: (state, action: PayloadAction<{item: MarketData, screenId: number, panelIndex: number}>) => {
+    const {item, screenId, panelIndex } = action.payload;
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
     const activedState = activeArray?.screens[panelIndex];
     if(!activedState) return
     const listName = activedState.activeList;
     const coin = item;
     activedState.storeList[listName].item = activedState.storeList[listName].item.filter(item => item.symbol !== coin.symbol);
-    if(!btsUsdt) return
+
+    const {ask1Price, bid1Price, src, symbol} = state.btcusdt;
+
     if (activedState.CoinData.symbol === item.symbol) {
       activedState.CoinData = {
-        ask1Price: btsUsdt.ask1Price,
-        bid1Price: btsUsdt.bid1Price,
-        src: 'https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg',
-        symbol: 'BTCUSDT',
+        ask1Price: ask1Price,
+        bid1Price: bid1Price,
+        src: src,
+        symbol: symbol,
         id: null,
         lines: [...activedState.CoinData.lines]
       };
       activedState.chartSettings = {
-        interval: '60',
-        symbol: 'BTCUSDT',
-        limit: '20000',
-        category: 'inverse',
-        _t: Date.now()
+        ...DEFAULT_CHART_SETTINGS
     };
-  }
+    }
   },
   addChart: (state, action: PayloadAction<{ 
     symbol: string,
@@ -229,9 +239,23 @@ export const coins = createSlice({
   setActiveList: (state, action: PayloadAction<{listName: string, screenId: number, panelIndex: number}>) => {
     const {screenId, listName, panelIndex} = action.payload;
     const activeArrayState = state.allscreens.find(arr => arr.id === screenId);
+    const activedState = activeArrayState?.screens[panelIndex];
+    const {ask1Price, bid1Price, src, symbol} = state.btcusdt;
     if (activeArrayState?.screens?.[panelIndex]) {
       activeArrayState.screens[panelIndex].activeList = listName;
     }
+    if(!activedState) return;
+      activedState.CoinData = {
+        ask1Price: ask1Price,
+        bid1Price: bid1Price,
+        src: src,
+        symbol: symbol,
+        id: null,
+        lines: [...activedState.CoinData.lines]
+      };
+      activedState.chartSettings = {
+        ...DEFAULT_CHART_SETTINGS
+    };
   },
   listCleaner: (state, action: PayloadAction<{activeList?: string, screenId: number, panelIndex: number}>) => {
     const {activeList, screenId, panelIndex} = action.payload
@@ -387,11 +411,11 @@ export const coins = createSlice({
         c.symbol === activeSymbol ? { ...c, lines: updatedLines } : c
       );
     }
-
   }
 }})
 
 export const {
+  setBtcUsdt,
   updateLinesEdit,
   removeHorzLine,
   addLineFlag,

@@ -55,6 +55,7 @@ function Chart({panelIndex}: Props) {
     const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
     const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
     const defaultPanelChartData = activeArray.CoinData.id;
+
 // ------ Chart -----------------------------
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
@@ -96,12 +97,11 @@ function Chart({panelIndex}: Props) {
         histogramSeriesRef.current.priceScale().applyOptions({
             scaleMargins: { top: 0.9, bottom: 0 },
         });
-
         histogramSeriesRef.current.setData(volume);
         return () => {
             Chart.remove();
         }
-    }, [chartSettings]);
+    }, [chartSettings, activeSymbol]);
 // --------- % Percent ranger % --------------
 //     useEffect(() => {
 //         if (!chartInstance.current) return;
@@ -452,16 +452,14 @@ function Chart({panelIndex}: Props) {
     }, [linesOfactiveList, linesOfDefaultList, chartSettings]);
 
     useEffect(() => {
-        if (candlestickSeriesRef.current && memoizedData) {
+        if (!candlestickSeriesRef.current || !histogramSeriesRef.current) return;
+        if (memoizedData.length) {
             candlestickSeriesRef.current.setData(memoizedData);
         }
-    }, [memoizedData]);
-
-    useEffect(() => {
-        if (histogramSeriesRef.current && memoizedVolume) {
+        if (memoizedVolume.length) {
             histogramSeriesRef.current.setData(memoizedVolume);
         }
-    }, [memoizedVolume]);
+    }, [activeList, memoizedData, memoizedVolume]);
 
     useEffect(() => {
         if (!chartContainerRef.current || !chartInstance.current) return;
