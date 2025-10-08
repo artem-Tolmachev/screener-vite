@@ -40,8 +40,8 @@ export default function DashboardPageHeader() {
 
   return (
     <div className="h-[10%] justify-between flex items-center text-[var(--color-text-primary)] w-full bg-[var(--color-bg-panel)] ">
-      <div className='flex gap-6'>
-        <div className="flex gap-1">
+      <div className='flex gap-6 items-center'>
+        <div className="flex gap-1 items-center">
         {['60', '30', '15', '5'].map((interval) => (
           <Button
             key={interval}
@@ -60,7 +60,7 @@ export default function DashboardPageHeader() {
           <span>{panelIndex}</span>
         </div>
 
-        <div>
+        <div className='flex items-center'>
           <Button 
             className='cursor-pointer text-[18px] text-cyan-800 hover:text-cyan-400'
             onClick={fullscreen}
@@ -73,11 +73,11 @@ export default function DashboardPageHeader() {
           </Button>
         </div>
 
-        <div className='toolBar'>
+        <div className='toolBar flex items-center'>
           <DropDownOfHeadesToolbar/>
         </div>
 
-        <div className='flex gap-1'>
+        <div className='flex gap-1 items-center'>
           <Button 
             onClick={() => dispatch(addLineFlag(LineType.HORIZONTAL_RAY))}
             data-tooltip-id="tooltip-hrz-ray"
@@ -107,7 +107,7 @@ export default function DashboardPageHeader() {
         </div>
       </div>
 
-      <div className='pr-4'>
+      <div className='pr-4 flex items-center'>
         {!dataUser.success ? <div className='flex gap-2'>
           <DialogLogin/>
           <DialogRegister/>
