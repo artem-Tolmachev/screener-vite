@@ -6,7 +6,6 @@ import {
   SheetContent,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { logout } from "@/pages/dashboard/coinData/slices/UserSlice";
