@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { Tooltip } from 'react-tooltip';
 import { allIconsName, IconKey, toolBarBtn } from "../Icons/getIconsOfDiologToolBars";
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { newScreen, setActivePanelIcon, setActivePanelIndex, setMainScreen } from "@/pages/dashboard/coinData/slices/CoinsSlice";
@@ -23,11 +23,16 @@ export function DropDownOfHeadesToolbar() {
         dispatch(setMainScreen(screenid))
         dispatch(setActivePanelIndex(0))
     } 
+    
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="cursor-pointer text-[18px] text-gray-600">
-                    Расположение графика
+                <Button 
+                    variant="outline" 
+                    className="cursor-pointer text-[18px] text-gray-600"
+                    data-tooltip-id="tooltip-screen-location"
+                    data-tooltip-content="Расположение графика"
+                    >
                     {toolBarBtn[activeButton].icon}
                 </Button>
             </DropdownMenuTrigger>
@@ -56,6 +61,13 @@ export function DropDownOfHeadesToolbar() {
                     })}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
+            <Tooltip 
+                id="tooltip-screen-location" 
+                variant="light"
+                place='bottom-end'
+                className='z-1000'
+                style={{ fontSize: '18px' }}
+            />
         </DropdownMenu>
     )
 }

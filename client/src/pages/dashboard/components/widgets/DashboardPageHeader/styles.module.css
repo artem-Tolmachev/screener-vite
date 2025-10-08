@@ -6,11 +6,7 @@
     background: var(--color-bg-panel);
     color: var(--color-text-primary);
 }
-.buttons{
-    display: flex;
-    margin-right: 30px;
-    gap: 10px;
-}
+
 .btn{
     border: 2px solid oklch(44.6% 0.03 256.802);
     color: oklch(44.6% 0.03 256.802);

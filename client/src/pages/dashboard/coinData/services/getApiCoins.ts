@@ -57,8 +57,25 @@ export const coinsApi = createApi({
                     dataValume: dataValumeParser(list)
                 }
             }
-        })
+        }),
+        register: builder.mutation<{ success: boolean; error?: string }, { email: string;   password: string }>({
+        query: (body) => ({
+                url: '/api/register',
+                method: 'POST',
+                body,
+            }),
+        }),
+        login: builder.mutation<
+              { success: boolean; token: string; user?: { id: number; email: string }; error?: string },
+            { email: string; password: string }
+            >({
+        query: (body) => ({
+                url: '/api/login',
+                method: 'POST',
+                body,
+            }),
+        }),
     })
 })
 
-export const {useLazyGetKlinesQuery, useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;
+export const {useRegisterMutation, useLoginMutation, useLazyGetKlinesQuery, useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;

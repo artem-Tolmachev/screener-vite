@@ -204,3 +204,11 @@ export interface AllDataCoin {
     markers: Record<string, string>
     isActive: boolean;
 }
+export interface LoginResponse {
+  success: boolean;
+  token?: string; 
+  user?: {
+    id: number;
+    email: string;
+  };
+}

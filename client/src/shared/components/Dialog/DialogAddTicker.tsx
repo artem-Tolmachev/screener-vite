@@ -3,8 +3,8 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog"
+} from "@/components/ui/dialog";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useGetCoinsQuery } from "@/pages/dashboard/coinData/services/getApiCoins";
 import CoinSearchPopup from "@/pages/dashboard/components/widgets/CoinSearchPopup/CoinSearchPopup";

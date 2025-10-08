@@ -7,17 +7,19 @@ import { TypedUseSelectorHook, useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import {UserSlice} from '@/pages/dashboard/coinData/slices/UserSlice';
 
 const rootReducer = combineReducers({
   [coinsApi.reducerPath]: coinsApi.reducer,
   coins: coins.reducer,
-  ordersBook: ordersBookSlice.reducer
+  ordersBook: ordersBookSlice.reducer,
+  user: UserSlice.reducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook'], 
+  whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook', 'user'], 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

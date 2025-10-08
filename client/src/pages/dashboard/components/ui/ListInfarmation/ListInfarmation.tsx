@@ -62,8 +62,8 @@ const ListInfarmation = ({listsData, panelIndex}: Props) => {
                         <h4>ИНСТРУМЕНТЫ</h4>
                     </div>
                 </div>
-                {markeredListData.map(row => {
-                  return  <div className="flex justify-between px-5 py-2">
+                {markeredListData.map((row, i) => {
+                  return  <div key={`${row.listName}-${i}`} className="flex justify-between px-5 py-2">
                                 <div className="flex items-center">
                                     <IconFlag marker={row.color}/>
                                     {row.listName}
@@ -90,8 +90,8 @@ const ListInfarmation = ({listsData, panelIndex}: Props) => {
                         <h4>ИНСТРУМЕНТЫ</h4>
                     </div>
                 </div>
-                {createdListData.map(row => {
-                    return  <div className="flex justify-between px-5 py-2">
+                {createdListData.map((row, i) => {
+                    return  <div key={`${row.listName}-${i}`} className="flex justify-between px-5 py-2">
                                 <div className="">
                                     {row.listName}
                                 </div>

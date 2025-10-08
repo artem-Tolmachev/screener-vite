@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {MarketData, AnyLine, FlagIsLine, LineType, LineData, TrendLine, HrzLineData} from "@/pages/dashboard/types";
+import {MarketData, AnyLine, FlagIsLine, LineType, LineData, TrendLine, HrzLineData, LoginResponse} from "@/pages/dashboard/types";
 import { BtcUsdtDate, DEFAULT_CHART_SETTINGS, DEFAULT_COIN_OPTION, DefaultCoin } from "../constants/defaultSettings";
 import { screen, screenData, ScreenGroup } from "../constants/screenData";
 import { IconKey } from "@/shared/components/Icons/getIconsOfDiologToolBars";
@@ -13,6 +13,7 @@ export interface CoinsState {
   fullscreenChartId: number | null;
   flagLine: FlagIsLine;
   btcusdt: BtcUsdtDate;
+  userData: LoginResponse;
 }
 
 const initialState: CoinsState = {
@@ -31,7 +32,12 @@ const initialState: CoinsState = {
     isLineHrz: false,
     isLineTrend: false,
     isRay: false
-  }
+  },
+  userData: {
+    success: false,
+    token: undefined,
+    user: undefined,
+  },
 };
 
 export const coins = createSlice({
