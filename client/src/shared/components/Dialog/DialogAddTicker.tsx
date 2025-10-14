@@ -19,7 +19,7 @@ interface Props {
 
 export function DialogAddTicker({panelIndex}: Props) {
     const { data } = useGetCoinsQuery();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, _] = useState(false);
     if(!data) return;
     const tickers = data?.tickers;
     const dispath = useAppDispatch()
