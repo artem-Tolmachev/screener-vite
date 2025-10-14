@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ColorType } from 'lightweight-charts';
 import { useRialTimeKlines } from "../dashboard/hooks/useRialTimeKlines";
-import { useGetCoinsQuery, useGetHeatMapQuery, useGetKlinesQuery } from "../dashboard/coinData/services/getApiCoins";
+import { useGetHeatMapQuery, useGetKlinesQuery } from "../dashboard/coinData/services/getApiCoins";
 import { Cand, Kline } from "../dashboard/types";
 import { useTimeSortedKlines } from "../dashboard/hooks/useTimeSortedKlines";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -16,8 +16,8 @@ const HeatMap = () => {
     const histogramSeriesRef = useRef<any>(null);
     const chartSettingsMap = useAppSelector(store => store.heatMap.chartSettings);
     useRialTimeKlines({candlestickSeriesRef});  
-    const { data: tickers } = useGetCoinsQuery();
-    const tickersData = tickers?.tickers ?? [];
+    // const { data: tickers } = useGetCoinsQuery();
+    // const tickersData = tickers?.tickers ?? [];
     if(!chartSettingsMap) return;
     
     const { interval, symbol, limit, category } = chartSettingsMap ?? {};
