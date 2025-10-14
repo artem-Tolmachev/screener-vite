@@ -14,11 +14,11 @@ interface IControlCheced {
     toggleCheckBox: (arg: string) => void;
 }
 interface Props {
-    isActive: boolean;  
-   panelIndex: number;  
-   screensDataArray: AllDataCoin[] | undefined;             
+    panelIndex?: number;  
+    screensDataArray: AllDataCoin[] | undefined;             
 }
-const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) => {
+
+const DashboardQuotesSidebar = ({screensDataArray, panelIndex }:Props) => {
     const [isOpen, setIsOpen] = useState<boolean | string>(false);
     const { columns, toggleCheckBox }: IControlCheced = useCollums([
         { key: 'price', name: 'Цена', visible: 1 },
@@ -62,7 +62,6 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex, isActive}:Props) 
                 />
                 <DashboardTickerOut
                     columns={columns}
-                    isActive={isActive}
                     panelIndex={panelIndex}
                     screensDataArray={screensDataArray}
                 />

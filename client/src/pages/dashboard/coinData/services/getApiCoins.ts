@@ -5,8 +5,8 @@ import { CurrentPrice, OrdersBookResponse } from '@/pages/ordersBookPage/types';
 
 export const coinsApi = createApi({
     reducerPath: 'coinsApi',
-    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
+    // baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({
             query: () => '/api/get-futures',
@@ -16,7 +16,7 @@ export const coinsApi = createApi({
             }),
         }),
         // getOrdersbook: builder.mutation<Record<string, OrderBookData>, {n: number}>({
-        getOrdersbook: builder.mutation<OrdersBookResponse, {minValue: number; range: number}>({
+         getOrdersbook: builder.mutation<OrdersBookResponse, {minValue: number; range: number}>({
             query: (body) => ({
                 url: '/api/new-orders',
                 method: 'POST',

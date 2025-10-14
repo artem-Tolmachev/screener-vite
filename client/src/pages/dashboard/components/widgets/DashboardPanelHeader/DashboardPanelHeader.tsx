@@ -12,14 +12,14 @@ interface Props {
     onToggleModal: (arg: string | boolean) => void;
     columns: IDashboardHeaderItems[];
     toggleCheckBox: (arg: string) => void;
-    panelIndex: number;
+    panelIndex?: number;
 }
 
 const DashboardPanelHeader = ({panelIndex, isOpen, onToggleModal, columns, toggleCheckBox}: Props) => {
     const [logoVisible, setLogoVisible] = useState<1 | 0>(1);
     const panelId = useAppSelector(store => store.coins.mainScreen);
     const dispatchLogo = useAppDispatch();
-
+    if(panelIndex === undefined) return;
     useEffect(() => {
         dispatchLogo(checkedLogo({isLogo: (logoVisible === 1), panelIndex, panelId}));
     }, [logoVisible]);

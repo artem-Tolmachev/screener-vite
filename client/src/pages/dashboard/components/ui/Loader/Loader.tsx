@@ -11,7 +11,6 @@ interface Props {
 
 export default function Loader({tick, panelIndex}: Props) {
   const {isItemLoaded, loadMore, items, itemStatusMap} = useInfiniteTickers({tick});
-
   return (
     <>
       <InfiniteLoader

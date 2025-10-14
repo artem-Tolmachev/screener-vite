@@ -19,7 +19,7 @@ export interface BybitKline {
 
 interface Props {
   candlestickSeriesRef: React.RefObject<Candlestick>;
-  panelIndex: number;
+  panelIndex?: number;
 }
 
 export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => {
@@ -30,6 +30,7 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   if(!ativeArray) return;
   const chartSettingsArrayScreens = ativeArray?.screens;
   if(!chartSettingsArrayScreens) return;
+  if(panelIndex === undefined) return;
   const chartSettings = chartSettingsArrayScreens[panelIndex].chartSettings
   if(!chartSettings) return;
   const {interval, symbol } = chartSettings;

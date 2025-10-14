@@ -6,7 +6,7 @@ function Layout() {
     // const hideFooter = ['/', '/register'].includes(location.pathname);
     const navArray = {
         "График": "/",
-        // "Посты": "/posts",
+        "Тепловая карта": "/heat-map",
         "Ликвидность": "/orders"
     };
 

@@ -57,7 +57,6 @@ useEffect(() => {
     setCurrentPage(1)
 }, [allRows.length]);
 
-
     return (
         <div className='h-full'>
             <SettingSection 

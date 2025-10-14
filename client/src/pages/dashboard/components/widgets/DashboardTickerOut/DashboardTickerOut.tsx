@@ -12,12 +12,12 @@ import useShowHide from '@/pages/dashboard/hooks/useShowHide';
 
 interface Props {
     columns: IDashboardHeaderItems[];
-    isActive: boolean;
-    panelIndex: number;
+    panelIndex?: number;
     screensDataArray: AllDataCoin[] | undefined;
 }
 
 const DashboardTickerOut = ({screensDataArray, panelIndex, columns }: Props) => {
+    if(panelIndex === undefined) return;
     const panel = screensDataArray?.[panelIndex];
     const activeList = panel?.activeList;
     const dispatch = useDispatch();

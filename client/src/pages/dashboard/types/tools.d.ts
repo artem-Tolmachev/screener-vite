@@ -5,6 +5,10 @@ declare global {
     interface Window {
     LightweightCharts: any;
   }
+    var TrendLineWithoutMarkersRenderer: any;
+    var TrendLineWithoutMarkers: any;
+    var ScaledRenderer: any;
+    var LineTool: any;
 }
 
 // declare global {

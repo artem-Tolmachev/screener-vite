@@ -8,18 +8,20 @@ import { useSelector } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {UserSlice} from '@/pages/dashboard/coinData/slices/UserSlice';
+import {HeatMapSlice} from '@/pages/heat-map/heapMapData/slices/HeatMapSlice';
 
 const rootReducer = combineReducers({
   [coinsApi.reducerPath]: coinsApi.reducer,
   coins: coins.reducer,
   ordersBook: ordersBookSlice.reducer,
-  user: UserSlice.reducer
+  user: UserSlice.reducer,
+  heatMap: HeatMapSlice.reducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook', 'user'], 
+  whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook', 'user', 'heatMap'], 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

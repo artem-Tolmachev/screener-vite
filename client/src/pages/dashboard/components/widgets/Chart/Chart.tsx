@@ -13,7 +13,7 @@ import './styles.module.css';
 import DiologRemooveLine from '@/shared/components/Dialog/DiologRemooveLine';
 
 interface Props {
-    panelIndex: number;
+    panelIndex?: number;
 }
 
 function Chart({panelIndex}: Props) {
@@ -31,6 +31,7 @@ function Chart({panelIndex}: Props) {
     const allScreens = useAppSelector(state => state.coins.allscreens);
     const activeScreen = allScreens.find(el => el.id === screenId);
     if(!activeScreen) return;
+    if(panelIndex === undefined) return;
     const activeArray = activeScreen.screens[panelIndex];
     const activeList = activeArray.activeList;
     const activeItem = activeArray.storeList[activeList].item;
@@ -88,12 +89,14 @@ function Chart({panelIndex}: Props) {
         };
         Chart.applyOptions(newOptions);
         chartInstance.current = Chart;
+
         candlestickSeriesRef.current = chartInstance.current.addCandlestickSeries();
         histogramSeriesRef.current = chartInstance.current.addHistogramSeries({
             priceFormat: { type: 'volume' },
             priceScaleId: 'volume',
             color: '#26a69a',
         });
+
         histogramSeriesRef.current.priceScale().applyOptions({
             scaleMargins: { top: 0.9, bottom: 0 },
         });
@@ -102,55 +105,6 @@ function Chart({panelIndex}: Props) {
             Chart.remove();
         }
     }, [chartSettings, activeSymbol]);
-// --------- % Percent ranger % --------------
-//     useEffect(() => {
-//         if (!chartInstance.current) return;
-//         function percentRenger(param: MouseEventParams){
-//             if (!param.point) return;
-//             const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
-//             const clickedTime = param.time;
-//             if (clickedPrice == null || clickedTime == null) return;
-//             const lineId = `percent-range-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-//             const rPrice1 = clickedPrice;
-//             const rTS1 = clickedTime as UTCTimestamp;
-//             const rPoint1 = { price: rPrice1, timestamp: rTS1};
-//             const rPrice2 = rPrice1 * (1 + 2 / 100);
-
-//             const rTS2 = rTS1 + 100000;
-//             const rPoint2 = { price: rPrice2, timestamp: rTS2 };
-
-//             const diff = rPrice2 - rPrice1;
-//             const percent = ((diff / rPrice1) * 100).toFixed(2);
-
-//        const r1 =  chartInstance.current.addLineTool('PriceRange', [rPoint1, rPoint2], {
-//             text: {
-//                 value: `Δ ${diff.toFixed(2)} (${percent}%)`,  // <-- показываем и разницу, и %
-//                 alignment: 'left',
-//                 font: {
-//                 color: 'rgba(41,98,255,1)',
-//                 size: 14,
-//                 family: 'Arial',
-//                 },
-//             },
-//             priceRange: {
-//                 background: { color: 'rgba(156,39,176,0.2)' },
-//                 border: { color: 'rgba(39,176,80,1)', width: 2 },
-//             },
-//                 visible: true,
-//                 editable: true,
-//             });
-
-//             console.log(r1)
-//         }
-        
-// chartInstance.current.subscribeClick(percentRenger)
-//         if(isLineType.isLineHrz){
-//             chartInstance.current.subscribeClick(percentRenger)
-//         }     
-//         return () => {
-//             chartInstance.current.unsubscribeClick(percentRenger);
-//         }
-//     },[chartSettings])
 // --------- newHrzLine ----------------------
     function renderHrzLine(){
             if (!chartInstance.current) return;
@@ -159,7 +113,8 @@ function Chart({panelIndex}: Props) {
                         if(el.name === "HorizontalLine"){
                             let price = el.price;
                             let lineData = {price: price, timestamp: el.timestamp}
-                            const lineTool = chartInstance.current.addLineTool("HorizontalLine", [lineData], {
+                            if(chartInstance.current && lineData){
+                                const lineTool = chartInstance.current?.addLineTool("HorizontalLine", [lineData], {
                                     id: el.id,
                                     line: {"color": "rgba(41,98,255,1)",
                                         "width": 2,
@@ -180,6 +135,7 @@ function Chart({panelIndex}: Props) {
                             lineToolsRef.current.push({
                                 tool: lineTool
                             });  
+                            }
                     }
                 });
             }else{
@@ -187,29 +143,31 @@ function Chart({panelIndex}: Props) {
                     if(el.name === "HorizontalLine"){
                         let price = el.price;
                         let lineData = {price: price, timestamp: el.timestamp}
-                        const lineTool = chartInstance.current.addLineTool("HorizontalLine", [lineData], {
-                            id: el.id,
-                            line: {
-                                "color": "rgba(41,98,255,1)",
-                                "width": 2,
-                                "style": 0,
-                                "join": "round",
-                                "cap": "square",
-                                "end": {
-                                    "left": 0,
-                                    "right": 0
+                        if(chartInstance.current && lineData){
+                            const lineTool = chartInstance.current?.addLineTool("HorizontalLine", [lineData], {
+                                id: el.id,
+                                line: {
+                                    "color": "rgba(41,98,255,1)",
+                                    "width": 2,
+                                    "style": 0,
+                                    "join": "round",
+                                    "cap": "square",
+                                    "end": {
+                                        "left": 0,
+                                        "right": 0
+                                    },
+                                    "extend": {
+                                        "right": true,
+                                        "left": true
+                                    }
                                 },
-                                "extend": {
-                                    "right": true,
-                                    "left": true
-                                }
-                            },
-                            visible: true,
-                            editable: true,
-                        });
-                        lineToolsRef.current.push({
-                            tool: lineTool
-                        });    
+                                visible: true,
+                                editable: true,
+                            });
+                            lineToolsRef.current.push({
+                                tool: lineTool
+                            });  
+                        }  
                     }
                 });
             }
@@ -218,7 +176,7 @@ function Chart({panelIndex}: Props) {
         if (!chartInstance.current) return;
             function newHrzLine(param: MouseEventParams){
             if (!param.point) return;
-                const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+                const clickedPrice = candlestickSeriesRef.current?.coordinateToPrice(param.point.y);
                 const clickedTime = param.time;
                 if (clickedPrice == null || clickedTime == null) return;
                 const lineId = `hrz-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -226,7 +184,7 @@ function Chart({panelIndex}: Props) {
                 const hlPrice: number = clickedPrice;
                 const hlTS = clickedTime as UTCTimestamp;
                 const hlPoint: HrzLineData = {name: "HorizontalLine", price: hlPrice, timestamp: hlTS, id: lineId};
-
+                if(panelIndex === undefined) return
                 dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
                 dispatch(addLineFlag(LineType.NONE));
 
@@ -247,7 +205,7 @@ function Chart({panelIndex}: Props) {
             if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
                     linesOfDefaultList.forEach(el => {
                         if(el.name === "TrendLine"){
-                            const lineTool = chartInstance.current.addLineTool('TrendLine', el.points.map((p: any) => ({ ...p })), {
+                            const lineTool = chartInstance.current?.addLineTool('TrendLine', el.points.map((p: any) => ({ ...p })), {
                                 id: el.id,
                                 "line": {
                                     "color": "rgba(41,98,255,1)",
@@ -260,14 +218,15 @@ function Chart({panelIndex}: Props) {
                                         "right": 0
                                     },
                                     "extend": {
-                                        "right": false,
+                                        "right": true,
                                         "left": false
                                     }
-                                },
+                                },         
                                 "visible": true,
-                                "editable": true
+                                "editable": true,
                             });
-                            lineToolsRef.current.push({
+
+                             lineToolsRef.current.push({
                                 tool: lineTool
                             });
                         }
@@ -275,7 +234,7 @@ function Chart({panelIndex}: Props) {
             }else{
                 linesOfactiveList.forEach(el => {
                     if(el.name === "TrendLine"){
-                        const lineTool = chartInstance.current.addLineTool('TrendLine', el.points.map((p: any )=> ({ ...p })), {
+                        const lineTool = chartInstance.current?.addLineTool('TrendLine', el.points.map((p: any )=> ({ ...p })), {
                             id: el.id,
                                 "line": {
                                     "color": "rgba(41,98,255,1)",
@@ -299,6 +258,7 @@ function Chart({panelIndex}: Props) {
                             lineToolsRef.current.push({
                                 tool: lineTool
                             });
+
                     }
                 });
             }
@@ -308,7 +268,7 @@ function Chart({panelIndex}: Props) {
         if (!chartInstance.current) return;
             function newTrendLine(param: MouseEventParams){
             if (!param.point) return;
-                const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+                const clickedPrice = candlestickSeriesRef.current?.coordinateToPrice(param.point.y);
                 const clickedTime = param.time;
                 if (clickedPrice == null || clickedTime == null) return;
                 const lineId = `trend-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -319,7 +279,7 @@ function Chart({panelIndex}: Props) {
                 const tlPrice2 = tlPrice1 + tlPrice1 / 100;
                 const tlPoint2 = {price: tlPrice2, timestamp: tlTS2};
                 const hlPoint: TrendLine = {name: "TrendLine", points: [tlPoint1, tlPoint2], id: lineId}
-
+                if(panelIndex === undefined) return
                 dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
                 dispatch(addLineFlag(LineType.NONE));
 
@@ -342,15 +302,17 @@ function Chart({panelIndex}: Props) {
                         if(el.name === "HorizontalRay"){
                             let price = el.price;
                             let lineData = {price: price, timestamp: el.timestamp}
-                            const lineTool = chartInstance.current.addLineTool("HorizontalRay", [lineData], {
+                            if(chartInstance.current && lineData){
+                                const lineTool = chartInstance.current?.addLineTool("HorizontalRay", [lineData], {
                                     id: el.id,
                                     line: { color: "rgba(41,98,255,1)", width: 2 },
                                     visible: true,
                                     editable: true,
                                 });
-                            lineToolsRef.current.push({
-                                tool: lineTool
-                            });  
+                                lineToolsRef.current.push({
+                                    tool: lineTool
+                                }); 
+                            } 
                     }
                 });
             }else{
@@ -358,7 +320,8 @@ function Chart({panelIndex}: Props) {
                     if(el.name === "HorizontalRay"){
                         let price = el.price;
                         let lineData = {price: price, timestamp: el.timestamp}
-                        const lineTool = chartInstance.current.addLineTool("HorizontalRay", [lineData], {
+                        if(chartInstance.current && lineData){
+                            const lineTool = chartInstance.current?.addLineTool("HorizontalRay", [lineData], {
                             id: el.id,
                             line: { color: "rgba(41,98,255,1)", width: 2 },
                             visible: true,
@@ -366,7 +329,8 @@ function Chart({panelIndex}: Props) {
                         });
                         lineToolsRef.current.push({
                             tool: lineTool
-                        });    
+                        });
+                        }    
                     }
                 });
             }
@@ -375,14 +339,14 @@ function Chart({panelIndex}: Props) {
         if (!chartInstance.current) return;
         function newHOrzRay(param: MouseEventParams){
             if (!param.point) return;
-            const clickedPrice = candlestickSeriesRef.current.coordinateToPrice(param.point.y);
+            const clickedPrice = candlestickSeriesRef.current?.coordinateToPrice(param.point.y);
             const clickedTime = param.time;
             if (clickedPrice == null || clickedTime == null) return;
             const hlPrice = clickedPrice;
             const hlTS = clickedTime as UTCTimestamp;
             const lineId = `ray-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
             const hlPoint: LineData = {name: "HorizontalRay", price: hlPrice, timestamp: hlTS, id: lineId};
-
+            if(panelIndex === undefined) return
             dispatch(addCustomLine({screenId, hlPoint, panelIndex, lineId}));
             dispatch(addLineFlag(LineType.NONE));
 
@@ -406,7 +370,7 @@ function Chart({panelIndex}: Props) {
             if (selectedLines && selectedLines.length > 0) {
                 try {
                     const lineData = JSON.parse(selectedLines);
-                    if (lineData[0]?.options?.id) {
+                    if (Array.isArray(lineData) && lineData[0]?.options?.id) {
                         setLineId(lineData[0].options.id);
                         setIsLine(true);
                     }
@@ -453,10 +417,10 @@ function Chart({panelIndex}: Props) {
 
     useEffect(() => {
         if (!candlestickSeriesRef.current || !histogramSeriesRef.current) return;
-        if (memoizedData.length) {
+        if (candlestickSeriesRef.current && memoizedData.length) {
             candlestickSeriesRef.current.setData(memoizedData);
         }
-        if (memoizedVolume.length) {
+        if (histogramSeriesRef.current && memoizedVolume.length) {
             histogramSeriesRef.current.setData(memoizedVolume);
         }
     }, [activeList, memoizedData, memoizedVolume]);

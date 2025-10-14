@@ -11,8 +11,10 @@ import { Tooltip } from 'react-tooltip';
 import { allIconsName, IconKey, toolBarBtn } from "../Icons/getIconsOfDiologToolBars";
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { newScreen, setActivePanelIcon, setActivePanelIndex, setMainScreen } from "@/pages/dashboard/coinData/slices/CoinsSlice";
+import { useState } from "react";
 
 export function DropDownOfHeadesToolbar() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const dispatch = useAppDispatch();
     const activeButton = useAppSelector(store => store.coins.activePanelBtn);
     
@@ -23,9 +25,9 @@ export function DropDownOfHeadesToolbar() {
         dispatch(setMainScreen(screenid))
         dispatch(setActivePanelIndex(0))
     } 
-    
+ 
     return (
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>
                 <Button 
                     variant="outline" 
@@ -67,6 +69,7 @@ export function DropDownOfHeadesToolbar() {
                 place='bottom-end'
                 className='z-1000'
                 style={{ fontSize: '18px' }}
+                isOpen={isMenuOpen}
             />
         </DropdownMenu>
     )

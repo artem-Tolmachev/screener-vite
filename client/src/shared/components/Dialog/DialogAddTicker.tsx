@@ -11,6 +11,7 @@ import CoinSearchPopup from "@/pages/dashboard/components/widgets/CoinSearchPopu
 import { setActivePanelIndex } from "@/pages/dashboard/coinData/slices/CoinsSlice";
 import { useAppDispatch } from "@/app/store/store";
 import { Tooltip } from "react-tooltip";
+import { useState } from "react";
 
 interface Props {
     panelIndex: number;
@@ -18,6 +19,7 @@ interface Props {
 
 export function DialogAddTicker({panelIndex}: Props) {
     const { data } = useGetCoinsQuery();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     if(!data) return;
     const tickers = data?.tickers;
     const dispath = useAppDispatch()
@@ -48,6 +50,7 @@ export function DialogAddTicker({panelIndex}: Props) {
                 place='bottom-end'
                 className='z-1000'
                 style={{ fontSize: '18px'}}
+                isOpen={isMenuOpen}
             />
         </Dialog>
     )

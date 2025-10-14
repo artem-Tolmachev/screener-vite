@@ -3,8 +3,8 @@ import Dashboard from '../pages/dashboard/Dashboard';
 import styles from './styles.module.css';
 import Layout from '@/shared/layouts/Layout';
 import OrdersBookPage from '@/pages/ordersBookPage/OrdersBookPage';
-import Posts from '@/pages/posts/Posts';
 import { StrictMode } from 'react';
+import HeatMap from '@/pages/heat-map/HeatMap';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Route path='/' element={<Layout />}>
               <Route index element={<Dashboard />} />
               <Route path='orders' element={<OrdersBookPage />} />
-              <Route path='posts' element={<Posts />} />
+              <Route path='heat-map' element={<HeatMap />} />
           </Route>
         </Routes>
       </div>

@@ -183,11 +183,12 @@ export const coins = createSlice({
     ask1Price: string,
     bid1Price: string,
     screenId: number,
-    panelIndex: number,
+    panelIndex: number | undefined,
     _t: number
   }>) => {
     const {screenId, symbol, src, ask1Price, bid1Price, panelIndex, _t} = action.payload;
     const activeArray = state.allscreens.find(arr => arr.id === screenId);
+    if(panelIndex === undefined) return;
     const activedState = activeArray?.screens[panelIndex];
     let activeList = activedState?.activeList;
     const id = screenId + '-' + panelIndex + '-' + activeList + '-' + symbol;
