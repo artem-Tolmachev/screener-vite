@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { ColorType, UTCTimestamp } from 'lightweight-charts';
+import { ColorType } from 'lightweight-charts';
 import { useRialTimeKlines } from "../dashboard/hooks/useRialTimeKlines";
 import { useGetCoinsQuery, useGetHeatMapQuery, useGetKlinesQuery } from "../dashboard/coinData/services/getApiCoins";
 import { Cand, Kline } from "../dashboard/types";
@@ -16,7 +16,7 @@ const HeatMap = () => {
     const histogramSeriesRef = useRef<any>(null);
     const chartSettingsMap = useAppSelector(store => store.heatMap.chartSettings);
     useRialTimeKlines({candlestickSeriesRef});  
-    const { data: tickers, isLoading } = useGetCoinsQuery();
+    const { data: tickers } = useGetCoinsQuery();
     const tickersData = tickers?.tickers ?? [];
     if(!chartSettingsMap) return;
     
@@ -45,7 +45,6 @@ const HeatMap = () => {
     const dataHeatMapItem = dataHeatMap.currentData ?? {}
 
     console.log('dataHeatMap ', dataHeatMapItem[symbol])
-
 
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
@@ -103,9 +102,6 @@ const HeatMap = () => {
         }
     }, [memoizedData, memoizedVolume]);
 
-    const filteredTickers = tickersData.filter(ticker =>
-    HeatMapItemSymbol.includes(ticker.symbol)
-);
 // --------------------------------------------------
 
 // useEffect(() => {
