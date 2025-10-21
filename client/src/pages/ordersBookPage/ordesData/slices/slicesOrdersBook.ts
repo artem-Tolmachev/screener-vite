@@ -12,7 +12,7 @@ const initialState: OrdersFilterState = {
   ordersFilter: {
     minValue: 50000,
     range: 1800000,
-    distance: 1
+    distance: 50
   }
 };
 

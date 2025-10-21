@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useTimeSortedKlines } from '../../../hooks/useTimeSortedKlines';                       
 import { ColorType, MouseEventParams, UTCTimestamp} from 'lightweight-charts';
 import { useEffect, useRef, useState} from 'react';
@@ -53,18 +52,40 @@ function Chart({panelIndex}: Props) {
     const dataKlines: Kline[] = [...klinesData?.dataKlines ?? []];
     const dataValume: Cand[] = [...klinesData?.dataValume ?? []];
     const { data, volume } = useTimeSortedKlines({ dataKlines, dataValume });
-    const memoizedData = React.useMemo(() => data, [JSON.stringify(data)]);
-    const memoizedVolume = React.useMemo(() => volume, [JSON.stringify(volume)]);
+
+    const memoizedData = data;
+    const memoizedVolume = volume;
     const defaultPanelChartData = activeArray.CoinData.id;
 
 // ------ Chart -----------------------------
     useEffect(() => {
     if (!chartContainerRef.current || !window.LightweightCharts?.createChart) return;
         const Chart = window.LightweightCharts.createChart(chartContainerRef.current);
+        chartInstance.current = Chart;
+
+        candlestickSeriesRef.current = chartInstance.current.addCandlestickSeries();
+        histogramSeriesRef.current = chartInstance.current.addHistogramSeries({
+            priceFormat: { type: 'volume' },
+            priceScaleId: 'volume',
+            color: '#26a69a',
+        });
+
+        histogramSeriesRef.current.priceScale().applyOptions({
+            scaleMargins: { top: 0.9, bottom: 0 },
+        });
+        candlestickSeriesRef.current.setData(memoizedData);
+        histogramSeriesRef.current.setData(memoizedVolume);
+        return () => {
+            Chart.remove();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!chartInstance.current) return;
         const newOptions = {
             layout: {
                 textColor: '#fff',
-                background: { type: ColorType.Solid, color: '#131722', fontSize: 20 }
+                background: { type: ColorType.Solid, color: '#101828', fontSize: 20 }
             },
             grid: {
                 vertLines: {
@@ -87,27 +108,11 @@ function Chart({panelIndex}: Props) {
                 fixRightEdge: false,
             },
         };
-        Chart.applyOptions(newOptions);
-        chartInstance.current = Chart;
-
-        candlestickSeriesRef.current = chartInstance.current.addCandlestickSeries();
-        histogramSeriesRef.current = chartInstance.current.addHistogramSeries({
-            priceFormat: { type: 'volume' },
-            priceScaleId: 'volume',
-            color: '#26a69a',
-        });
-
-        histogramSeriesRef.current.priceScale().applyOptions({
-            scaleMargins: { top: 0.9, bottom: 0 },
-        });
-        histogramSeriesRef.current.setData(volume);
-        return () => {
-            Chart.remove();
-        }
-    }, [chartSettings, activeSymbol]);
-// --------- newHrzLine ----------------------
+        chartInstance.current.applyOptions(newOptions);
+    }, [chartSettings]);
+    // --------- newHrzLine --------
     function renderHrzLine(){
-            if (!chartInstance.current) return;
+        if (!chartInstance.current) return;
             if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
                     linesOfDefaultList.forEach(el => {
                         if(el.name === "HorizontalLine"){
@@ -218,7 +223,7 @@ function Chart({panelIndex}: Props) {
                                         "right": 0
                                     },
                                     "extend": {
-                                        "right": true,
+                                        "right": false,
                                         "left": false
                                     }
                                 },         
@@ -294,7 +299,7 @@ function Chart({panelIndex}: Props) {
             chartInstance.current.unsubscribeClick(newTrendLine);
         }
     },[chartSettings, isLineType.isLineTrend])
-// ---------------- newHOrzRay --------------
+// ---------------- newHOrzRay --------
     function renderHrzRay(){
         if (!chartInstance.current) return;
                 if(activeSymbol === 'BTCUSDT' && !defaultPanelChartData){
@@ -417,13 +422,14 @@ function Chart({panelIndex}: Props) {
 
     useEffect(() => {
         if (!candlestickSeriesRef.current || !histogramSeriesRef.current) return;
-        if (candlestickSeriesRef.current && memoizedData.length) {
-            candlestickSeriesRef.current.setData(memoizedData);
+        if (data.length) {
+
+            candlestickSeriesRef.current.setData(data);
         }
-        if (histogramSeriesRef.current && memoizedVolume.length) {
-            histogramSeriesRef.current.setData(memoizedVolume);
+        if (volume.length) {
+            histogramSeriesRef.current.setData(volume);
         }
-    }, [activeList, memoizedData, memoizedVolume]);
+    }, [activeList, data, volume, chartSettings]);
 
     useEffect(() => {
         if (!chartContainerRef.current || !chartInstance.current) return;
@@ -455,60 +461,60 @@ function Chart({panelIndex}: Props) {
 
     useEffect(() => {
     if (!chartInstance.current) return;
-    const handleLineEdit = (lineTool: any) => {
-        const { selectedLineTool } = lineTool;
-        const { toolType: name, options, points} = selectedLineTool;
-        const { id: lineId } = options;
-        const firstPoint = points[0];
-        if (!lineId || !name) return;
-        if (!firstPoint) return;
-        const { price, timestamp } = firstPoint;
-        switch(name){
-            case "HorizontalRay": 
-                if (price === undefined || timestamp === undefined) return;
-                dispatch(updateLinesEdit({
-                lineId,
-                screenId,
-                panelIndex,
-                lineObject: {
-                    name,
-                    id: lineId,
-                    price,
-                    timestamp,
-                } as LineData
-            }));
-            break;
-            case "HorizontalLine": 
-                if (price === undefined || timestamp === undefined) return;
-                dispatch(updateLinesEdit({
-                lineId,
-                screenId,
-                panelIndex,
-                lineObject: {
-                    name,
-                    id: lineId,
-                    price,
-                    timestamp,
-                } as HrzLineData
-            }));
-            break;
-            case "TrendLine": 
-                if (!points) return;
-                dispatch(updateLinesEdit({
-                lineId,
-                screenId, 
-                panelIndex,
-                lineObject: {
-                    name,
-                    id: lineId,
-                    points: points.map((p: any) => ({ ...p }))
-                } as TrendLine
-            }));
-            break;
-            default:
-            console.warn(`Не поддерживается линия: ${name}`);
-        } 
-    };
+        const handleLineEdit = (lineTool: any) => {
+            const { selectedLineTool } = lineTool;
+            const { toolType: name, options, points} = selectedLineTool;
+            const { id: lineId } = options;
+            const firstPoint = points[0];
+            if (!lineId || !name) return;
+            if (!firstPoint) return;
+            const { price, timestamp } = firstPoint;
+            switch(name){
+                case "HorizontalRay": 
+                    if (price === undefined || timestamp === undefined) return;
+                    dispatch(updateLinesEdit({
+                    lineId,
+                    screenId,
+                    panelIndex,
+                    lineObject: {
+                        name,
+                        id: lineId,
+                        price,
+                        timestamp,
+                    } as LineData
+                }));
+                break;
+                case "HorizontalLine": 
+                    if (price === undefined || timestamp === undefined) return;
+                    dispatch(updateLinesEdit({
+                    lineId,
+                    screenId,
+                    panelIndex,
+                    lineObject: {
+                        name,
+                        id: lineId,
+                        price,
+                        timestamp,
+                    } as HrzLineData
+                }));
+                break;
+                case "TrendLine": 
+                    if (!points) return;
+                    dispatch(updateLinesEdit({
+                    lineId,
+                    screenId, 
+                    panelIndex,
+                    lineObject: {
+                        name,
+                        id: lineId,
+                        points: points.map((p: any) => ({ ...p }))
+                    } as TrendLine
+                }));
+                break;
+                default:
+                console.warn(`Не поддерживается линия: ${name}`);
+            } 
+        };
     chartInstance.current.subscribeLineToolsAfterEdit(handleLineEdit);
     return () => {
         chartInstance.current.unsubscribeLineToolsAfterEdit?.(handleLineEdit);

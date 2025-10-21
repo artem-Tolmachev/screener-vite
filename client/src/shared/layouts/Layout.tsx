@@ -12,7 +12,7 @@ function Layout() {
 
     return (
         <>
-            <header className="flex items-center justify-center bg-blue-950 h-[10%] min-h-[30px]">
+            <header className="flex items-center justify-center bg-black h-[10%] min-h-[30px] border-b-1 border-b-gray-500">
                 <div className="flex justify-between items-center w-[100%] h-full">
                     {Object.entries(navArray).map(([text, path]) => (
                     <div className='w-[50%] h-full text-center' key={path + 1} >

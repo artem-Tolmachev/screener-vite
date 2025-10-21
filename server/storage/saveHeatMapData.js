@@ -6,7 +6,9 @@ function Parser(symbol, order, time, side) {
   if (!json[symbol]) {
     json[symbol] = [];
   }
-
+  if (!order || order.length === 0) {
+    return
+  }
   for (const [price, volume] of order) {
     // если ордер был исполнен добавляем поле to: время исполнения
     const floatPrice = parseFloat(price);
@@ -30,11 +32,24 @@ function Parser(symbol, order, time, side) {
 }
 
 export default function saveHeatMapData(orderBooks) {
+  if (!orderBooks?.data?.b || !orderBooks?.data?.a) {
+    console.log('[OrderBookData] пропуск некорректного пакета:', orderBooks);
+    return;
+  }
   const bids = orderBooks.data.b;
   const asks = orderBooks.data.a;
   const time = +orderBooks.ts / 1000;
   const symbol = orderBooks.data.s;
 
+  let rengeUsdt = 150000
+
+  for (const [price, volume] of bids){
+      if((price * volume) < rengeUsdt) return
+  }
+  for (const [price, volume] of asks){
+      if((price * volume) < rengeUsdt) return
+  }
+  
   Parser(symbol, bids, time, 'bids');
   Parser(symbol, asks, time, 'asks');
 

@@ -83,11 +83,16 @@ export const useRialTimeKlines = ({candlestickSeriesRef, panelIndex}: Props) => 
   }
 };
 
-return () => {
-    if (pingInterval) clearInterval(pingInterval);
-    socket.close();
-}
 
-}, [candlestickSeriesRef, interval, symbol, panelIndex]);
+  return () => {
+    if (pingInterval) clearInterval(pingInterval);
+    setTimeout(() => {
+      if (socket.readyState !== WebSocket.CLOSED) {
+        socket.close();
+      }
+    }, 100);
+  };
+
+}, [ interval, symbol, panelIndex]);
 
 };

@@ -5,8 +5,8 @@ import { CurrentPrice, OrdersBookResponse } from '@/pages/ordersBookPage/types';
 
 export const coinsApi = createApi({
     reducerPath: 'coinsApi',
-    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000'}),
+    // baseQuery: fetchBaseQuery({ baseUrl: 'https://my-server-latest-1.onrender.com' }),
     endpoints: (builder) => ({
         getCoins: builder.query<OriginalResponse, void>({
             query: () => '/api/get-futures',
@@ -38,9 +38,14 @@ export const coinsApi = createApi({
                 return updetedPrices 
             }
         }),
-        getHeatMap: builder.query<HeatMapData, void>({
-            query: () => '/api/heatmap'
+        getHeatMapSymbols: builder.query<string[], void>({
+            query: () => '/api/heatmap',
+            transformResponse: (response: { symbols: string[] }) => response.symbols
         }),
+        getHeatMap: builder.query<any, string | null>({
+            query: (symbol) => `api/heatmap?symbol=${symbol}`,
+                keepUnusedDataFor: 300
+            }),
         getKlines: builder.query<{
             dataKlines: ReturnType<typeof dataKlinesParser>,
             dataValume: ReturnType<typeof dataValumeParser>
@@ -78,4 +83,4 @@ export const coinsApi = createApi({
     })
 })
 
-export const {useRegisterMutation, useLoginMutation, useLazyGetKlinesQuery, useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;
+export const {useGetHeatMapSymbolsQuery, useRegisterMutation, useLoginMutation, useLazyGetKlinesQuery, useGetCoinsQuery, useGetKlinesQuery, useGetOrdersbookMutation, useGetHeatMapQuery, useUpdateOrdersBookTickersDataMutation } = coinsApi;

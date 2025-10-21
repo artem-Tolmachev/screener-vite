@@ -39,7 +39,7 @@ export default function DashboardPageHeader() {
   }
 
   return (
-    <div className="h-[10%] justify-between flex items-center text-[var(--color-text-primary)] w-full bg-[var(--color-bg-panel)] ">
+    <div className="h-[10%] justify-between flex items-center text-[var(--color-text-primary)] w-full bg-[var(--color-bg-panel)]">
       <div className='flex gap-6 items-center'>
         <div className="flex gap-1 items-center">
         {['60', '30', '15', '5'].map((interval) => (
@@ -73,7 +73,10 @@ export default function DashboardPageHeader() {
           </Button>
         </div>
 
-        <div className='toolBar flex items-center'>
+        <div
+          data-tooltip-id="tooltip-screen-location"
+          data-tooltip-content="Расположение графика"
+          className='toolBar flex items-center'>
           <DropDownOfHeadesToolbar/>
         </div>
 
@@ -93,7 +96,7 @@ export default function DashboardPageHeader() {
             data-tooltip-id="tooltip-trend-line"
             data-tooltip-content="Линия Теренда"
           >
-            <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fill-rule="nonzero"><path d="M7.354 21.354l14-14-.707-.707-14 14z"></path><path d="M22.5 7c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5zM5.5 24c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
+            <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fillRule="nonzero"><path d="M7.354 21.354l14-14-.707-.707-14 14z"></path><path d="M22.5 7c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5zM5.5 24c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
           </Button>
 
           <Button 
@@ -102,7 +105,7 @@ export default function DashboardPageHeader() {
             data-tooltip-content="Горизонтальная линия"
             className={`cursor-pointer rounded-[4px] text-blue-900 border-1 border-blue-900 hover:border-blue-600 hover:text-blue-600 ${isLine.isLineHrz && 'text-blue-600 border-1 border-blue-600' }`}
             >
-            <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fill-rule="nonzero"><path d="M4 15h8.5v-1h-8.5zM16.5 15h8.5v-1h-8.5z"></path><path d="M14.5 16c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
+            <svg style={{height: '36px', width: '36px'}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28"><g fill="currentColor" fillRule="nonzero"><path d="M4 15h8.5v-1h-8.5zM16.5 15h8.5v-1h-8.5z"></path><path d="M14.5 16c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5zm0 1c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5z"></path></g></svg>
           </Button>
         </div>
       </div>
@@ -136,6 +139,13 @@ export default function DashboardPageHeader() {
       />
       <Tooltip 
         id="tooltip-screen-full" 
+        variant="light"
+        place='bottom-end'
+        className='z-1000'
+        style={{ fontSize: '18px' }}
+      />
+      <Tooltip 
+        id="tooltip-screen-location"
         variant="light"
         place='bottom-end'
         className='z-1000'

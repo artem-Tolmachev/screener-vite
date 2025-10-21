@@ -12,11 +12,11 @@ export interface HeatMapState {
 }
 
 const initialState: HeatMapState = {
-    chartSettings: {
-    interval: '5',
-    symbol: 'BTCUSDT',
-    limit: '20000',
-    category: 'inverse',
+      chartSettings: {
+      interval: '5',
+      symbol: 'BTCUSDT',
+      limit: '20000',
+      category: 'inverse',
     }
 }
 
@@ -24,8 +24,8 @@ export const HeatMapSlice = createSlice({
   name: "heat-map",
   initialState,
   reducers: {
-    addHeatMapChart: (state, action: PayloadAction<{ symbol: string }>) => {
-        state.chartSettings.symbol = action.payload.symbol
+    addHeatMapChart: (state, action: PayloadAction<{ ticker: string }>) => {
+        state.chartSettings.symbol = action.payload.ticker
     },
   },
 

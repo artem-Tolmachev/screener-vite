@@ -19,7 +19,6 @@ interface Props {
 
 export function DialogAddTicker({panelIndex}: Props) {
     const { data } = useGetCoinsQuery();
-    const [isMenuOpen, _] = useState(false);
     if(!data) return;
     const tickers = data?.tickers;
     const dispath = useAppDispatch()
@@ -27,8 +26,6 @@ export function DialogAddTicker({panelIndex}: Props) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    data-tooltip-id={`tooltip-add-coin ${panelIndex}`}
-                    data-tooltip-content="Добавить инструмент"
                     variant="ghost" className="cursor-pointer w-[40px] h-[40px] bg-blue-950  hover:bg-blue-900 active:bg-blue-700"
                     onClick={() => dispath(setActivePanelIndex(panelIndex))}
                 >
@@ -44,14 +41,6 @@ export function DialogAddTicker({panelIndex}: Props) {
                 <DialogTitle>Выбрать манету</DialogTitle>
                 </VisuallyHidden>
             </DialogContent>
-            <Tooltip
-                id={`tooltip-add-coin ${panelIndex}`}
-                variant="light"
-                place='bottom-end'
-                className='z-1000'
-                style={{ fontSize: '18px'}}
-                isOpen={isMenuOpen}
-            />
         </Dialog>
     )
 }

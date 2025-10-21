@@ -2,7 +2,7 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup
-}from "@/components/ui/resizable";
+}from "@/components/ui/resizable"; 
 
 import React, { Suspense } from "react";
 import ChartSkeleton  from "@/shared/components/Skeleton/ChartSkeleton";
@@ -24,18 +24,20 @@ const DashboardQuotesSidebarLazy = React.lazy(() =>
 
 function DashboardPage(){
   const controler = useControlerSettingsButtons();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   if (!controler || !controler.layout) {
-    return <div>Loading...</div>; // Или другой индикатор загрузки
+    return <div>Loading...</div>; 
   }
-  
+
   if(!controler) return;
   const {screensDataArray, screenId, isActiveList, togglePanel, toggle, screens, direction, layout, greed, screenIndex} = controler
 
   const { rows, col, side } = layout || {};
+
   if (!screensDataArray || !isActiveList) {
     return <div>Loading data...</div>;
   }
+
   return (
     <>
       {
@@ -72,7 +74,7 @@ function DashboardPage(){
                           </ResizablePanel>
                         {isActiveList[panelIndex] && (
                           <>
-                            <ResizableHandle className={`data-[panel-group-direction=vertical]:h-1 data-[panel-group-direction=horizontal]:w-1 ${screenIndex === panelIndex ? "border-2 border-blue-700" : "border-transparent border-2"}`}/>
+                            <ResizableHandle className={`data-[panel-group-direction=vertical]:h-0 data-[panel-group-direction=horizontal]:w-0 ${screenIndex === panelIndex ? "border-1 border-gray-500" : "border-transparent border-2"}`}/>
                             <ResizablePanel
                               key={`outer-dashboard-${outerIndex}`}
                               id={`outer-dashboard-${outerIndex}`}
@@ -99,7 +101,7 @@ function DashboardPage(){
                 })}
               </ResizablePanelGroup>
             </ResizablePanel>
-          </ResizablePanelGroup>
+          </ResizablePanelGroup> 
           ) : col && side === "left" ? (
             <ResizablePanelGroup direction="horizontal" className="pl-1 pb-1">
               <ResizablePanel>
@@ -355,7 +357,7 @@ function DashboardPage(){
                   </>
                   }
                   <DashboardSettingsPanel
-                    
+
                     onCLick={() => togglePanel(screens - 1)}
                     isActive={isActiveList[screens - 1]}
                   />

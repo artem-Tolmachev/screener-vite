@@ -3,25 +3,29 @@ import cors from 'cors';
 import klines from './routes/klines.js';
 import futures from './routes/futures.js';
 import fetchNewOrderBook from './routes/fetchNewOrderBook.js';
-import fetchNewHeatMap from './routes/fetchNewHeatMap.js'
-import fetchTickersForOrderBook from './routes/fetchTickersForOrderBook.js'
+import fetchNewHeatMap from './routes/fetchNewHeatMap.js';
+import fetchTickersForOrderBook from './routes/fetchTickersForOrderBook.js';
 import OrdersBook from './ws/ordersBook.js';
-
+import register from './routes/register.js';
+import login from './routes/login.js';
 const PORT = process.env.PORT || 5000;
 const app = express();
 
 // http://localhost:5173;
 //'https://screener-vite.vercel.app';
 
-// app.use(cors({ origin: ['http://localhost:5173'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
+app.use(cors({ origin: ['http://localhost:5173'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
 
-app.use(cors({ origin: ['https://screener-vite.vercel.app'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
+// app.use(cors({ origin: ['https://screener-vite.vercel.app'], methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, }));
+
 app.use(express.json());
 app.use('/api', futures);
+app.use('/api', register);
+app.use('/api', login);
 app.use('/api', klines);
 app.use('/api', fetchNewOrderBook);
-app.use('/api', fetchNewHeatMap)
-app.use('/api', fetchTickersForOrderBook)
+app.use('/api', fetchNewHeatMap);
+app.use('/api', fetchTickersForOrderBook);
 
 OrdersBook(app);
 app.listen(PORT, () => console.log(`🟢 Сервер стартовал на http://localhost:${PORT}`));

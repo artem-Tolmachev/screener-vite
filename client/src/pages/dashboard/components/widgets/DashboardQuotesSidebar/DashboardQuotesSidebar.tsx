@@ -49,7 +49,7 @@ const DashboardQuotesSidebar = ({screensDataArray, panelIndex }:Props) => {
     if (!tickers) {
         return <DashboardSkeleton />;
     }
-    
+
     return (
         <div className="w-full rounded-tl-[8px] bg-gray-950 h-full min-h-0 flex flex-col">
             <div className={`${styles.dashbord_right} parents-block`}>

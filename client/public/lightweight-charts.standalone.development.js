@@ -2345,6 +2345,7 @@
         Brush: BrushOptionDefaults,
         Path: PathOptionDefaults,
         Text: TextOptionDefaults,
+        HeatMapLine: TrendLineOptionDefaults
     };
 
     var PriceAxisBackgroundRenderer = /** @class */ (function () {
@@ -5739,7 +5740,82 @@
         };
         return LineToolTrendLine;
     }(LineTool));
+// ---------------------------------------------------------------------------------------
+    var LineToolHeatMapPaneView  = /** @class */ (function (_super) {
+        __extends(LineToolHeatMapPaneView , _super);
+        function LineToolHeatMapPaneView (source, model) {
+            var _this = _super.call(this, source, model) || this;
+            _this._internal__lineRenderer = new SegmentRenderer();
+            _this._internal__labelRenderer = new TextRenderer();
+            _this._internal__renderer = null;
+            return _this;
+        }
+        // eslint-disable-next-line complexity
+        LineToolHeatMapPaneView .prototype._internal__updateImpl = function () {
+            this._internal__renderer = null;
+            this._internal__invalidated = false;
+            var priceScale = this._internal__source._internal_priceScale();
+            var timeScale = this._internal__model._internal_timeScale();
+            if (!priceScale || priceScale._internal_isEmpty() || timeScale._internal_isEmpty()) {
+                return;
+            }
+            var strictRange = timeScale._internal_visibleTimeRange();
+            if (strictRange === null) {
+                return;
+            }
+            var points = this._internal__source._internal_points();
+            if (points.length < 2) {
+                return;
+            }
+            var options = this._internal__source._internal_options();
+            var isOutsideView = Math.max(points[0].timestamp, points[1].timestamp) < strictRange.from._internal_timestamp;
+            if (!isOutsideView || options.line.extend.left || options.line.extend.right) {
+                _super.prototype._internal__updateImpl.call(this);
+                if (this._internal__points.length < 2) {
+                    return;
+                }
+                var compositeRenderer = new CompositeRenderer();
+                this._internal__lineRenderer._internal_setData({ _internal_line: options.line, _internal_points: this._internal__points });
+                compositeRenderer._internal_append(this._internal__lineRenderer);
+                if (options.text.value) {
+                    var point0 = this._internal__points[0];
+                    var point1 = this._internal__points[1];
+                    var start = point0.x < point1.x ? point0 : point1;
+                    var end = start === point0 ? point1 : point0;
+                    var angle = Math.atan((end.y - start.y) / (end.x - start.x)) / Math.PI * -180;
+                    var align = options.text.box.alignment.horizontal;
+                    var pivot = align === "left" /* Left */
+                        ? start.clone() : align === "right" /* Right */
+                        ? end.clone() : new Point((point0.x + point1.x) / 2, (point0.y + point1.y) / 2);
+                    var labelOptions = deepCopy(options.text);
+                    labelOptions.box = __assign(__assign({}, labelOptions.box), { angle: angle });
+                    this._internal__labelRenderer._internal_setData({ _internal_text: labelOptions, _internal_points: [pivot] });
+                    compositeRenderer._internal_append(this._internal__labelRenderer);
+                }
+                // this._internal_addAnchors(compositeRenderer);
+                this._internal__renderer = compositeRenderer;
+            }
+        };
+        return LineToolHeatMapPaneView;
+    }(LineToolPaneView));
 
+    var LineToolHeatMap = /** @class */ (function (_super) {
+        __extends(LineToolHeatMap, _super);
+        function LineToolHeatMap(model, options, points) {
+            if (points === void 0) { points = []; }
+            var _this = _super.call(this, model, options, points) || this;
+            _this._internal__toolType = 'HeatMapLine';
+            _this._internal__setPaneViews([new LineToolHeatMapPaneView(_this, model)]);
+            return _this;
+        }
+        LineToolHeatMap.prototype._internal_pointsCount = function () {
+            return 2;
+        };
+
+        return LineToolHeatMap;
+    }(LineTool));
+
+// -------------------------------------------------------------------------
     var LineToolArrow = /** @class */ (function (_super) {
         __extends(LineToolArrow, _super);
         function LineToolArrow() {
@@ -8006,6 +8082,7 @@
         Arrow: LineToolArrow,
         ExtendedLine: LineToolExtendedLine,
         HorizontalRay: LineToolHorizontalRay,
+        HeatMapLine: LineToolHeatMap
     };
 
     var LineToolCreator = /** @class */ (function () {

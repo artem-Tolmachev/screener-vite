@@ -26,10 +26,10 @@ const DashboardPanelHeader = ({panelIndex, isOpen, onToggleModal, columns, toggl
 
     return (
         <div className={styles.header}>
-            <DashboardSettings 
-                onToggleModal={onToggleModal}
-                panelIndex={panelIndex}
-            />
+                <DashboardSettings 
+                    onToggleModal={onToggleModal}
+                    panelIndex={panelIndex}
+                />
             {isOpen === 'settings'
                 && <PopupSettings
                     isOpen={isOpen}
@@ -61,7 +61,5 @@ const DashboardPanelHeader = ({panelIndex, isOpen, onToggleModal, columns, toggl
 }
 
 export default DashboardPanelHeader;
-
-
 
 

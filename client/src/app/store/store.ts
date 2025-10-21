@@ -21,7 +21,12 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: [coinsApi.reducerPath, 'coins', 'ordersBook', 'user', 'heatMap'], 
+    blacklist: [
+    'coinsApi',
+    'heatMap',     
+    'coins',      
+    'ordersBook'
+  ]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -29,10 +34,16 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // отключаем предупреждения redux-persist
+      serializableCheck: false,
     }).concat(coinsApi.middleware),
-
+    devTools: process.env.NODE_ENV !== 'production' && {
+    trace: false,
+    traceLimit: 25
+  },
 })
+
+
+
 export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;

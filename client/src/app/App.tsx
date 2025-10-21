@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 import Layout from '@/shared/layouts/Layout';
 import OrdersBookPage from '@/pages/ordersBookPage/OrdersBookPage';
 import { StrictMode } from 'react';
-import HeatMap from '@/pages/heat-map/HeatMap';
+import HeatMap from '@/pages/heat-map/components/HeatMap';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Route path='/' element={<Layout />}>
               <Route index element={<Dashboard />} />
               <Route path='orders' element={<OrdersBookPage />} />
-              <Route path='heat-map' element={<HeatMap />} />
+              <Route path='heat-map' element={<HeatMap/>} />
           </Route>
         </Routes>
       </div>

@@ -8,7 +8,6 @@ import saveOrderState from '../storage/saveOrderState.js';
 import saveHeatMapData from '../storage/saveHeatMapData.js';
 export default async function OrdersBook(app) {
     const orderBooks = new Map(); // Для хранения последних состояний
-
     const allSymbols = await Tickers();
     let socket = new WebSocket('wss://stream.bybit.com/v5/public/linear');
     function setupSocketHandlers(ws) {
@@ -34,9 +33,10 @@ export default async function OrdersBook(app) {
                 if (!order) return;
                 // сохраняем данные в  .log
                 // orderbookSaver(order)
+
                 // saveHeatMapData(order)
                 if (!order?.data?.s) {
-                    // console.warn('⚠️ Пропущено сообщение без data.s:', order);
+                    // console.warn(' Пропущено сообщение без data.s:', order);
                     return;
                 }
                 const symbol = order.data.s;
