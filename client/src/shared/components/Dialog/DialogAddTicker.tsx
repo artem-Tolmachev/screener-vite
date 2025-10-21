@@ -10,8 +10,6 @@ import { useGetCoinsQuery } from "@/pages/dashboard/coinData/services/getApiCoin
 import CoinSearchPopup from "@/pages/dashboard/components/widgets/CoinSearchPopup/CoinSearchPopup";
 import { setActivePanelIndex } from "@/pages/dashboard/coinData/slices/CoinsSlice";
 import { useAppDispatch } from "@/app/store/store";
-import { Tooltip } from "react-tooltip";
-import { useState } from "react";
 
 interface Props {
     panelIndex: number;

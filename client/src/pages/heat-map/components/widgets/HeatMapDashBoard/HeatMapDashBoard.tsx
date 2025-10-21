@@ -3,7 +3,7 @@ import { useGetHeatMapSymbolsQuery } from "@/pages/dashboard/coinData/services/g
 import { addHeatMapChart } from "@/pages/heat-map/heapMapData/slices/HeatMapSlice";
 
 const HeatMapDashBoard = () => {
-    const { data: symbols, isLoading: isSymbolsLoading } = useGetHeatMapSymbolsQuery();
+    const { data: symbols } = useGetHeatMapSymbolsQuery();
     const dispatch = useAppDispatch();
 
     function addTicker(ticker: string){

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { ColorType, UTCTimestamp} from 'lightweight-charts';
+import { ColorType } from 'lightweight-charts';
 import { useRialTimeKlines } from "@/pages/dashboard/hooks/useRialTimeKlines";
 import { useAppSelector } from "@/app/store/store";
 import { Cand, Kline } from "@/pages/dashboard/types";
 import { useTimeSortedKlines } from "@/pages/dashboard/hooks/useTimeSortedKlines";
-import { useGetHeatMapQuery, useGetKlinesQuery} from "@/pages/dashboard/coinData/services/getApiCoins";
+import { useGetKlinesQuery} from "@/pages/dashboard/coinData/services/getApiCoins";
 
 const HeatMapChart = () => {
     const chartInstance = useRef<any>(null);
@@ -13,15 +13,15 @@ const HeatMapChart = () => {
     const histogramSeriesRef = useRef<any>(null);
     const chartSettingsMap = useAppSelector(store => store.heatMap.chartSettings);
     useRialTimeKlines({candlestickSeriesRef});  
-    const heatMapSeriesRef = useRef<any>(null);
+    // const heatMapSeriesRef = useRef<any>(null);
 
-    const [allLineIsLoaded, setLineIsLoaded] = useState(false);
+    const [allLineIsLoaded] = useState(false);
 
     if(!chartSettingsMap) return;
     
     const { interval, symbol, limit, category } = chartSettingsMap ?? {};
 
-    const { data: klinesData, isFetching: isKlines } = useGetKlinesQuery(
+    const { data: klinesData } = useGetKlinesQuery(
         { interval, symbol, limit, category }, { skip: !symbol, refetchOnMountOrArgChange: true }
     );
 
