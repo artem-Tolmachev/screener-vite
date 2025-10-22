@@ -78,7 +78,7 @@ function Chart({panelIndex}: Props) {
         return () => {
             Chart.remove();
         }
-    }, []);
+    }, [chartSettings]);
 
     useEffect(() => {
         if (!chartInstance.current) return;
